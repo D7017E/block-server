@@ -1,6 +1,7 @@
 from shutil import move
 from PepperConnection import PepperConnection
 from behaviors.movement.translation.translation import PepperMove
+from behaviors.expressions.expression import PepperExpression
 from behaviors.speech.PepperSpeech import PepperSpeech
 import time
 
@@ -13,6 +14,7 @@ def main():
     tts_service = conn.get_speech_service()
     move_service = conn.get_move_service()
     auto_service = conn.get_autonomous_service()
+    led_service = conn.get_led_service()
     battery_service = conn.get_battery_service()
     
     # default state is "interactive"
@@ -26,11 +28,15 @@ def main():
     print(auto_service.focusedActivity())
 
     move_service.setOrthogonalSecurityDistance(0.2)
-
     # pepperMove = PepperMove(move_service)
     # pepperMove.move(0.2, -0.1, 1, 10)
+
+    pepExpr = PepperExpression(0xffffff, led_service)
+    # pepExpr.fade_eyes(led_service, 0xff0000, 1)
+    # pepExpr.random_eyes(5)
+    pepExpr.blink_eyes(0.10)
     while True:
         time.sleep(1)
-    # move_service.move(0,0,0)
+    
 
 main()

@@ -37,3 +37,7 @@ class PepperConnection():
     
     def get_tablet_service(self):
         return self.session.service("ALTabletService")
+
+    def get_led_service(self):
+        return self.session.service("ALLeds")
+
