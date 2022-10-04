@@ -1,4 +1,6 @@
+from shutil import move
 from PepperConnection import PepperConnection
+from behaviors.movement.translation.translation import PepperMove
 from behaviors.speech.PepperSpeech import PepperSpeech
 import time
 
@@ -11,28 +13,24 @@ def main():
     tts_service = conn.get_speech_service()
     move_service = conn.get_move_service()
     auto_service = conn.get_autonomous_service()
+    battery_service = conn.get_battery_service()
     
     # default state is "interactive"
     auto_service.setState("safeguard")
+    # auto_service.setState("interactive")
     print(auto_service.getState())
+    print(auto_service.focusedActivity())
+    print(auto_service.getAutonomousActivityStatistics())
+    print("battery level is: {}%".format(battery_service.getBatteryCharge()))
+    # auto_service.stopFocus()
+    print(auto_service.focusedActivity())
 
-    # move_service.setOrthogonalSecurityDistance(0.4)
-    move_service.move(0.25,0,0)
-    time.sleep(3)
-    move_service.move(0,0,0)
-    return
+    move_service.setOrthogonalSecurityDistance(0.2)
 
-    # for i in range(10):
-    #     move_service.move(0, 0, 1)
-    #     time.sleep(0.1)
-    # return
-    PepperSpeech().talk(tts_service, "Hello, world!")
+    # pepperMove = PepperMove(move_service)
+    # pepperMove.move(0.2, -0.1, 1, 10)
     while True:
-        inp = raw_input("Enter text: ")
-
-        tts_service.say(
-            ("\\RSPD={0}\\ \\VCT={1} \\" + str(inp)).format(100, 100)
-        )
-    
+        time.sleep(1)
+    # move_service.move(0,0,0)
 
 main()

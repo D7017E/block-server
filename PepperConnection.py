@@ -1,5 +1,4 @@
 import qi
-import paramiko
 
 class PepperConnection():
 
@@ -13,6 +12,11 @@ class PepperConnection():
 
     def connect(self):
         self.session.connect("tcp://{0}:{1}".format(self.ip, self.port))
+        if self.session.isConnected():
+            print("Successfully connected to robot")
+        else:
+            print("Error connecting to robot")
+            raise ConnectionError("Error connecting to robot")
 
         # ssh = paramiko.SSHClient()
         # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -27,3 +31,9 @@ class PepperConnection():
 
     def get_autonomous_service(self):
         return self.session.service("ALAutonomousLife")
+    
+    def get_battery_service(self):
+        return self.session.service("ALBattery")
+    
+    def get_tablet_service(self):
+        return self.session.service("ALTabletService")
