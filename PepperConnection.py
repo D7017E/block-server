@@ -27,3 +27,7 @@ class PepperConnection():
 
     def get_autonomous_service(self):
         return self.session.service("ALAutonomousLife")
+
+    def get_led_service(self):
+        return self.session.service("ALLeds")
+
