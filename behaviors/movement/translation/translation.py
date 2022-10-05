@@ -12,11 +12,10 @@ class PepperMove():
 
     def move(self, x, y, angle, duration):
         """
-        Move which takes in a
-        * x speed, positive means forward, negative means backward [-0.35, 0.35]
-        * y speed, positive means left, negative means right [-0.35, 0.35]
-        * angle speed, positive means rotate left, negative means rotate right [-1, 1]
-        * duration in seconds. It is the duration of how long the movement should happen
+        * <x> is a speed, positive means forward, negative means backward, between [-0.35, 0.35]
+        * <y> is a speed, positive means left, negative means right, between [-0.35, 0.35]
+        * <angle> is a speed, positive means rotate left, negative means rotate right, between [-1, 1]
+        * <duration> in seconds. It is the duration of how long the movement should happen
 
         x and y max speed is 0.35 which is 35 cm per second.
         Meaning that if setting the timeout to 3 it moves 105 cm forward, (0.35 * 3)
