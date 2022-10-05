@@ -9,10 +9,10 @@ class Gesture():
 
     def move_head(self, yaw, degrees, speed):
         """
-        Move head which takes in a
-        * yaw boolean, if True then we change the yaw (left, right) else pitch (up, down)
-        * degrees, if yaw [-119.5, 119.5] (right and left) | if pitch [-40.5, 20.5] (up and down)
-        * speed, between 0 and 100. Equal to percentage of max speed
+        * <yaw> boolean, if True then we change the yaw (left, right) else pitch (up, down)
+        * <degrees>, if yaw between [-119.5, 119.5] (right and left) | if pitch between [-40.5, 20.5] (up and down)
+        * <speed>, between (0, 100]. Equal to percentage of max speed
+        Moves the head in the direction given by parameters
         """
         if speed <= 0 or speed > 100:
             print("Wrong input for speed, only accepts (0, 100]")
@@ -68,8 +68,8 @@ class Gesture():
     
     def spin_head(self, duration):
         """
+        * <duration> is the number of seconds that the head should spin
         Spins the head up and down, side to side
-        * duration is the number of seconds that the head should spin
         """
         if self.spinning_head_running:
             print("Spinning head is already running")
