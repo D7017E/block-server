@@ -26,7 +26,7 @@ class PepperConnection():
     def get_speech_service(self):
         return self.session.service("ALAnimatedSpeech")
 
-    def get_move_service(self):
+    def get_motion_service(self):
         return self.session.service("ALMotion")
 
     def get_autonomous_service(self):
@@ -40,4 +40,3 @@ class PepperConnection():
 
     def get_led_service(self):
         return self.session.service("ALLeds")
-
