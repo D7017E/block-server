@@ -10,17 +10,18 @@ class PepperMove():
         self.thread = None
         self.lock = threading.Lock()
 
-    def move(self, x, y, angle, timeout):
+    def move(self, x, y, angle, duration):
         """
         Move which takes in a
-        * x speed, positive means forward, negative means backward
-        * y speed, positive means left, negative means right
-        * angle speed, positive means rotate left, negative means rotate right
-        * timeout
+        * x speed, positive means forward, negative means backward [-0.35, 0.35]
+        * y speed, positive means left, negative means right [-0.35, 0.35]
+        * angle speed, positive means rotate left, negative means rotate right [-1, 1]
+        * duration in seconds. It is the duration of how long the movement should happen
+
         x and y max speed is 0.35 which is 35 cm per second.
         Meaning that if setting the timeout to 3 it moves 105 cm forward, (0.35 * 3)
         
-        angle max speed is about 58 degrees per second, but is set as percentage.
+        Angle max speed is about 58 degrees per second, but is set as percentage.
         1 is 58 degrees per second. passing in 6.25s, then the robot will do one revolution
         """
 
@@ -34,7 +35,7 @@ class PepperMove():
             self.thread.join()
         self.thread = threading.Thread(
             target=self.__stop_movement,
-            args=(stop_id, timeout))
+            args=(stop_id, duration))
         self.thread.start()
         self.lock.release()
 
