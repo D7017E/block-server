@@ -40,3 +40,12 @@ class PepperConnection():
 
     def get_led_service(self):
         return self.session.service("ALLeds")
+    
+    def get_audio_service(self):
+        return self.session.service("ALAudioDevice")
+
+    def get_behavior_service(self):
+        return self.session.service("ALBehaviorManager")
+
+    def get_blinking_service(self):
+        return self.session.service("ALAutonomousBlinking")

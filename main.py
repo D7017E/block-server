@@ -19,9 +19,19 @@ def main():
     auto_service = conn.get_autonomous_service()
     battery_service = conn.get_battery_service()
     led_service = conn.get_led_service()
+    audio_service = conn.get_audio_service()
+    tablet_service = conn.get_tablet_service()
+    behavior_service = conn.get_behavior_service()
+    blinking_service = conn.get_blinking_service()
     
     # default state is "interactive"
     auto_service.setState("safeguard")
+    move_service.setIdlePostureEnabled("Head", False)
+    auto_service.stopAll()
+    behavior_service.stopAllBehaviors()
+    blinking_service.setEnabled(False)
+    print(blinking_service.isEnabled())
+    # print(ret)
     # auto_service.setState("interactive")
     print(auto_service.getState())
     print(auto_service.focusedActivity())
@@ -44,9 +54,16 @@ def main():
     # pepperMove = PepperMove(move_service)
     # pepperMove.move(0.2, -0.1, 1, 10)
 
-    # pepExpr = PepperExpression(0xffffff, led_service)
+
+
+    pepExpr = PepperExpression(0xffffff, led_service)
+    # pepExpr.fade_eyes(0xffffff, 1)
+    audio_service.playSine(293, 25, 1, 1)
+    # pepExpr.rotate_eyes(0xffffff)
+    # pepExpr.sad_eyes()
     # pepExpr.fade_eyes(led_service, 0xff0000, 1)
     # pepExpr.random_eyes(5)
+    # pepExpr.squint_eyes(1)
     # pepExpr.blink_eyes(0.10)
     # while True:
     #     time.sleep(1)
