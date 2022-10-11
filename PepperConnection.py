@@ -49,3 +49,9 @@ class PepperConnection():
 
     def get_blinking_service(self):
         return self.session.service("ALAutonomousBlinking")
+
+    def get_sound_localization_service(self):
+        return self.session.service("ALSoundLocalization")
+
+    def get_memory_service(self):
+        return self.session.service("ALMemory")

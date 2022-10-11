@@ -7,6 +7,9 @@ from behaviors.speech.PepperSpeech import PepperSpeech
 import time
 import os
 import threading
+import sys
+
+from optparse import OptionParser
 
 def main():
 
@@ -26,7 +29,7 @@ def main():
     
     # default state is "interactive"
     auto_service.setState("safeguard")
-    move_service.setIdlePostureEnabled("Head", False)
+    motion_service.setIdlePostureEnabled("Head", False)
     auto_service.stopAll()
     behavior_service.stopAllBehaviors()
     blinking_service.setEnabled(False)
@@ -41,9 +44,11 @@ def main():
     print(auto_service.focusedActivity())
     
     ges = Gesture(motion_service)
-    threading.Thread(target=ges.spin_head, args=(10,)).start()
+    ges.reset_head()
+    # threading.Thread(target=ges.spin_head, args=(10,)).start()
     pepExpr = PepperExpression(0xffffff, led_service)
-    pepExpr.random_eyes(10)
+    # pepExpr.random_eyes(10)
+
     
     # move_service.setOrthogonalSecurityDistance(0.4)
     # move_service.move(0.25,0,0)
@@ -56,17 +61,25 @@ def main():
 
 
 
-    pepExpr = PepperExpression(0xffffff, led_service)
     # pepExpr.fade_eyes(0xffffff, 1)
-    audio_service.playSine(293, 25, 1, 1)
     # pepExpr.rotate_eyes(0xffffff)
-    # pepExpr.sad_eyes()
+    pepExpr.wink_eye("right")
+
     # pepExpr.fade_eyes(led_service, 0xff0000, 1)
     # pepExpr.random_eyes(5)
     # pepExpr.squint_eyes(1)
     # pepExpr.blink_eyes(0.10)
-    # while True:
-    #     time.sleep(1)
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print
+        print("Interrupted by user, shutting down")
+        ges.reset_head()
+        pepExpr.fade_eyes(0xffffff, 1)
+        sys.exit(0)
+
     # move_service.move(0,0,0)
 
 main()
+
