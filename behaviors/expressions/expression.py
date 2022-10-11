@@ -3,8 +3,8 @@ import time
 class PepperExpression():
 
     def __init__(self, startColor, service):
-        self.previousColor = startColor
         self.service = service
+        self.fade_eyes(startColor, 1)
         service.createGroup(
             "BlinkGroup",
             [
@@ -34,16 +34,39 @@ class PepperExpression():
                 "FaceLed1",              
             ]
         )
+        service.createGroup(
+            "RightWink",
+            [
+                "FaceLedRight0",
+                "FaceLedRight1",
+                "FaceLedRight3",
+                "FaceLedRight4",
+                "FaceLedRight5",
+                "FaceLedRight7",
+            ]
+        )
+        service.createGroup(
+            "LeftWink",
+            [
+                "FaceLedLeft0",
+                "FaceLedLeft1",
+                "FaceLedLeft3",
+                "FaceLedLeft4",
+                "FaceLedLeft5",
+                "FaceLedLeft7",
+            ]
+        )
 
 
-    def rotate_eyes(self, rgb):
+    def rotate_eyes(self, rgb, duration):
         """
         * <rgb> the hexadecimal color value that the rotating part of the eyes should be. Example: 0x000000 for white.
+        * <duration> time in seconds that determine how long the rotation will be.
 
         Makes a color rotate around the eyes. 
         """
         self.previousColor = rgb
-        self.service.rotateEyes(rgb, 1, 5)
+        self.service.rotateEyes(rgb, 1, duration)
 
     def fade_eyes(self, rgb, duration):
         """
@@ -61,6 +84,7 @@ class PepperExpression():
         """
         self.service.fadeRGB("AngryEyesGroup", 0xff0000, 0.10)
         self.service.fadeRGB("-AngryEyesGroup", 0x000000, 0.10)
+
     def sad_eyes(self):
         """
         Makes the eyes blue.
@@ -104,3 +128,19 @@ class PepperExpression():
         """
         self.service.randomEyes(duration)
         self.fade_eyes(self.previousColor, 1)
+
+    def wink_eye(self, eye):
+        """
+        * <eye> string, either "right" or "left". Decides which eye to wink with.
+
+        Winks with one eye for a short duration.
+        """
+        if eye == "right":
+            self.service.fadeRGB("RightWink", 0x000000, 0.1)
+            time.sleep(0.1)
+            self.service.fadeRGB("RightWink", self.previousColor, 0.1)
+        elif eye == "left":
+            self.service.fadeRGB("LeftWink", 0x000000, 0.1)
+            time.sleep(0.1)
+            self.service.fadeRGB("LeftWink", self.previousColor, 0.1)
+
