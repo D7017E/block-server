@@ -1,6 +1,7 @@
 from PepperConnection import PepperConnection
 from behaviors.expressions.expression import PepperExpression
-from behaviors.movement.gesture.gesture import Gesture
+from behaviors.movement.gesture.head_gesture import Head_gesture
+from behaviors.movement.gesture.arm_gesture import Arm_gesture
 from behaviors.movement.translation.translation import PepperMove
 from behaviors.speech.PepperSpeech import PepperSpeech
 from handle_code.blockly_connection import server
@@ -13,19 +14,19 @@ import sys
 class Main:
     def __init__(self):
         self.should_run = True
-        self.connectToPepper = False
+        self.connect_to_pepper = True
         self.main()
 
     def main(self):
         threading.Thread(target=self.run).start()
-        server.start_server(5000)
+        server.start_server(5020)
         print("Interrupted by user, shutting down")
         self.should_run = False
         time.sleep(1.6)
         sys.exit(0)
 
     def run(self):
-        if self.connectToPepper:
+        if self.connect_to_pepper:
             conn = PepperConnection("130.240.238.32", 9559, "nao", os.getenv("password"))
 
             conn.connect()
@@ -56,8 +57,9 @@ class Main:
             # auto_service.stopFocus()
             print(auto_service.focusedActivity())
             
-            ges = Gesture(motion_service)
-            ges.reset_head()
+            # arm_ges.move_left_arm(False, 100, 90)
+            # arm_ges.move_right_arm(False, 100, 90)
+            # ges.reset_head()
             # threading.Thread(target=ges.spin_head, args=(10,)).start()
             pepExpr = PepperExpression(0xffffff, led_service)
             # pepExpr.random_eyes(10)
@@ -68,10 +70,22 @@ class Main:
             # time.sleep(3)
             # move_service.move(0,0,0)
             # return
+            pepExpr.angry_eyes()
+            head_ges = Head_gesture(motion_service)
+            head_ges.reset_head()
+
 
             pepperMove = PepperMove(motion_service)
-            # pepperMove.move(0.2, -0.1, 1, 10)
+            pepperMove.move(0,0,0.5,3)
+            time.sleep(2.5)
+            pepperMove.move(0,0,1,10)
 
+            arm_ges = Arm_gesture(motion_service)
+            arm_ges.move_left_arm(True, 100, 89.5)
+            time.sleep(0.1)
+            arm_ges.move_right_arm(True, 100, -89.5)   
+
+            # pepperMove.move(0.2, -0.1, 1, 10)
 
 
             # pepExpr.fade_eyes(0xffffff, 1)
@@ -87,9 +101,13 @@ class Main:
                 program = Queue.get_next_program()
                 if program is not None:
                     self.executeProgram(program)
-        if self.connectToPepper:
+        if self.connect_to_pepper:
             print("Resetting pepper")
-            ges.reset_head()
+            head_ges.reset_head()
+            arm_ges.move_left_arm(True, 100, 0.5)
+            arm_ges.move_right_arm(True, 100, -0.5)   
+            arm_ges.move_left_arm(False, 100, 90)
+            arm_ges.move_right_arm(False, 100, 90)
             pepExpr.fade_eyes(0xffffff, 1)
             pepperMove.stop_movement()
             time.sleep(0.4)

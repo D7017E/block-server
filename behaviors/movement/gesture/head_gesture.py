@@ -1,7 +1,7 @@
 import time
 import threading
 
-class Gesture():
+class Head_gesture():
     
     def __init__(self, service):
         self.service = service
@@ -104,3 +104,4 @@ class Gesture():
             self.move_head(True, yaw, 40)
             self.move_head(False, pitch, 40)
             time.sleep(0.1)
+    
