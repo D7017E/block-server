@@ -2,13 +2,13 @@
 Main file, used to initialize connections.
 """
 
-
+# pylint: disable=superfluous-parens
 import time
 import os
 import threading
 import sys
 from numpy import empty
-from PepperConnection import PepperConnection
+from pepper_connection import PepperConnection
 from behaviors.expressions.expression import PepperExpression
 from behaviors.movement.gesture.head_gesture import HeadGesture
 from behaviors.movement.gesture.arm_gesture import ArmGesture
