@@ -4,7 +4,7 @@ Class for making Pepper talk.
 
 # pylint: disable=too-few-public-methods
 
-class PepperSpeech():
+class PepperSpeech(object):
     """
     Class for making Pepper talk.
     """

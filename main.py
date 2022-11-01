@@ -73,8 +73,6 @@ class Main:
             print("battery level is: {}%".format(battery_service.getBatteryCharge()))
             # auto_service.stopFocus()
             print(auto_service.focusedActivity())
-            # arm_ges.move_left_arm(False, 100, 90)
-            # arm_ges.move_right_arm(False, 100, 90)
             # ges.reset_head()
             # threading.Thread(target=ges.spin_head, args=(10,)).start()
             pep_expr = PepperExpression(0xffffff, conn.get_led_service())
@@ -92,14 +90,18 @@ class Main:
 
 
             pepper_move = PepperMove(motion_service)
-            pepper_move.move(0, 0, 0.5, 3)
-            time.sleep(2.5)
-            pepper_move.move(0, 0, 1, 10)
+            # pepper_move.move(0, 0, 0.5, 3)
+            # time.sleep(2.5)
+            # pepper_move.move(0, 0, 1, 10)
 
             arm_ges = ArmGesture(motion_service)
-            arm_ges.move_left_arm(True, 100, 89.5)
-            time.sleep(0.1)
-            arm_ges.move_right_arm(True, 100, -89.5)
+            arm_ges.rotate_left_elbow_roll(100, -89)
+            arm_ges.rotate_right_elbow_roll(100, 89)
+            arm_ges.rotate_right_shoulder_roll(100, -30)
+            arm_ges.rotate_left_shoulder_roll(100, 30)
+            arm_ges.rotate_right_shoulder_pitch(100, 0)
+            arm_ges.rotate_left_shoulder_pitch(100, 0)
+
             # pepperMove.move(0.2, -0.1, 1, 10)
 
 
@@ -119,10 +121,13 @@ class Main:
         if self.connect_to_pepper:
             print("Resetting pepper")
             head_ges.reset_head()
-            arm_ges.move_left_arm(True, 100, 0.5)
-            arm_ges.move_right_arm(True, 100, -0.5)
-            arm_ges.move_left_arm(False, 100, 90)
-            arm_ges.move_right_arm(False, 100, 90)
+            arm_ges.rotate_right_shoulder_roll(100, -.5)
+            arm_ges.rotate_left_shoulder_roll(100, .5)
+            arm_ges.rotate_right_shoulder_pitch(100, 90)
+            arm_ges.rotate_left_shoulder_pitch(100, 90)
+            arm_ges.rotate_left_elbow_roll(100, -.5)
+            arm_ges.rotate_right_elbow_roll(100, .5)
+
             pep_expr.fade_eyes(0xffffff, 1)
             pepper_move.stop_movement()
             time.sleep(0.4)
