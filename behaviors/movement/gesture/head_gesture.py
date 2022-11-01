@@ -5,7 +5,7 @@ Class for gesticulating the head.
 import time
 import threading
 
-class HeadGesture():
+class HeadGesture(object):
     """
     Class for gesticulating the head.
     """
