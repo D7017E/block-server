@@ -1,16 +1,28 @@
+"""
+Class for gesticulating the head.
+"""
+
 import time
 import threading
 
-class Gesture():
-    
+class HeadGesture(object):
+    """
+    Class for gesticulating the head.
+    """
+
     def __init__(self, service):
+        """
+        * <service>, a motion_service from naoqi.
+        Initializes the HeadGesture object.
+        """
         self.service = service
         self.spinning_head_running = False
 
     def move_head(self, yaw, degrees, speed):
         """
         * <yaw> boolean, if True then we change the yaw (left, right) else pitch (up, down)
-        * <degrees>, if yaw between [-119.5, 119.5] (right and left) | if pitch between [-40.5, 20.5] (up and down)
+        * <degrees>, if yaw between [-119.5, 119.5] (right and left) |
+                  if pitch between [-40.5, 20.5] (up and down)
         * <speed>, between (0, 100]. Equal to percentage of max speed
         Moves the head in the direction given by parameters
         """
@@ -30,14 +42,14 @@ class Gesture():
                 return
             angle = degrees * 3.14 / 180
             self.service.setAngles("HeadPitch", angle, speed)
-    
+
     def reset_head(self):
         """
         Resets the head position to 0, 0 for Pepper
         """
         self.move_head(True, 0, 70)
         self.move_head(False, 0, 70)
-    
+
     def nod_head(self):
         """
         Nods the head up and down, this method takes about 1.6 seconds
@@ -65,7 +77,7 @@ class Gesture():
         self.move_head(True, 45, 100)
         time.sleep(1)
         self.reset_head()
-    
+
     def spin_head(self, duration):
         """
         * <duration> is the number of seconds that the head should spin
@@ -77,14 +89,16 @@ class Gesture():
         self.spinning_head_running = True
         self.reset_head()
         time.sleep(0.3)
-        th = threading.Thread(target=self.__do_spin_head,
-                         args=())
-        th.start()
+        thread = threading.Thread(
+            target=self.__do_spin_head,
+            args=()
+        )
+        thread.start()
         time.sleep(duration)
         self.spinning_head_running = False
         time.sleep(0.1)
         self.reset_head()
-        
+
     def __do_spin_head(self):
         yaw = 0
         yaw_step = 20

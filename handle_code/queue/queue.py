@@ -1,35 +1,40 @@
+"""
+This module handles the queue of programs
+"""
 import threading
 
 class Queue(object):
+    """
+    This class is a static class with a list of programs that can
+    either be appended to or popped from.
+    """
     queue = []
     lock = threading.Lock()
-    
+
     @classmethod
-    def add_program_to_queue(self, program):
+    def add_program_to_queue(cls, program):
         """
         <program> string, is the program as a string
-        
+
         A static method which adds a program to the queue
         """
-        print(self.queue)
-        self.lock.acquire()
-        self.queue.append(program)
-        length = len(self.queue)
-        self.lock.release()
+        cls.lock.acquire()
+        cls.queue.append(program)
+        length = len(cls.queue)
+        cls.lock.release()
         return length
 
     @classmethod
-    def get_next_program(self):
+    def get_next_program(cls):
         """
         A static method with returns the first value in the queue
-        
+
         Returns None if there is no more value, otherwise the program string
         """
-        self.lock.acquire()
-        if len(self.queue) == 0:
-            self.lock.release()
+        cls.lock.acquire()
+        if cls.queue == []:
+            cls.lock.release()
             return None
-        program = self.queue.pop(0)
-        self.lock.release()
+        program = cls.queue.pop(0)
+        cls.lock.release()
         return program
-    

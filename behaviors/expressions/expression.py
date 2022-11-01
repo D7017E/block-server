@@ -1,8 +1,14 @@
+"""
+This module handles expressions
+"""
 import time
 
-class PepperExpression():
-
+class PepperExpression(object):
+    """
+    This class makes Pepper do expressions with the eyes.
+    """
     def __init__(self, startColor, service):
+        self.previous_color = None
         self.service = service
         self.fade_eyes(startColor, 1)
         service.createGroup(
@@ -31,7 +37,7 @@ class PepperExpression():
             "-AngryEyesGroup",
             [
                 "FaceLed0",
-                "FaceLed1",              
+                "FaceLed1",
             ]
         )
         service.createGroup(
@@ -60,22 +66,24 @@ class PepperExpression():
 
     def rotate_eyes(self, rgb, duration):
         """
-        * <rgb> the hexadecimal color value that the rotating part of the eyes should be. Example: 0x000000 for white.
+        * <rgb> the hexadecimal color value that the rotating part of the eyes should be.
+        Example: 0x000000 for white.
         * <duration> time in seconds that determine how long the rotation will be.
 
-        Makes a color rotate around the eyes. 
+        Makes a color rotate around the eyes.
         """
-        self.previousColor = rgb
+        self.previous_color = rgb
         self.service.rotateEyes(rgb, 1, duration)
 
     def fade_eyes(self, rgb, duration):
         """
-        * <rgb> the hexadecimal color value that the eyes should be faded to. Example: 0x000000 for white. 
+        * <rgb> the hexadecimal color value that the eyes should be faded to.
+        Example: 0x000000 for white.
         * <duration> time in seconds that determine how fast the eyes will fade in.
 
         Sets both eyes to a certain color, with a fade in time of duration.
         """
-        self.previousColor = rgb
+        self.previous_color = rgb
         self.service.fadeRGB("FaceLeds", rgb, duration)
 
     def angry_eyes(self):
@@ -94,8 +102,8 @@ class PepperExpression():
     def __close_eyes(self):
         self.service.fadeRGB("BlinkGroup", 0x000000, 0.10)
 
-    def __open_eyes(self): 
-        self.service.fadeRGB("FaceLeds", self.previousColor, 0.10)
+    def __open_eyes(self):
+        self.service.fadeRGB("FaceLeds", self.previous_color, 0.10)
 
     def blink_eyes(self, duration):
         """
@@ -107,7 +115,7 @@ class PepperExpression():
         self.__close_eyes()
         time.sleep(duration)
         self.__open_eyes()
-    
+
     def squint_eyes(self, duration):
         """
         * <duration> time in seconds that the eyes should squint for.
@@ -116,7 +124,7 @@ class PepperExpression():
         """
         self.service.fadeRGB("SquintGroup", 0x000000, 1)
         time.sleep(duration)
-        self.service.fadeRGB("SquintGroup", self.previousColor, 1)
+        self.service.fadeRGB("SquintGroup", self.previous_color, 1)
         # self.open_eyes()
 
     def random_eyes(self, duration):
@@ -127,7 +135,7 @@ class PepperExpression():
         Afterwards fades to self.previousColor.
         """
         self.service.randomEyes(duration)
-        self.fade_eyes(self.previousColor, 1)
+        self.fade_eyes(self.previous_color, 1)
 
     def wink_eye(self, eye):
         """
@@ -138,9 +146,8 @@ class PepperExpression():
         if eye == "right":
             self.service.fadeRGB("RightWink", 0x000000, 0.1)
             time.sleep(0.1)
-            self.service.fadeRGB("RightWink", self.previousColor, 0.1)
+            self.service.fadeRGB("RightWink", self.previous_color, 0.1)
         elif eye == "left":
             self.service.fadeRGB("LeftWink", 0x000000, 0.1)
             time.sleep(0.1)
-            self.service.fadeRGB("LeftWink", self.previousColor, 0.1)
-
+            self.service.fadeRGB("LeftWink", self.previous_color, 0.1)
