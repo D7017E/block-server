@@ -7,7 +7,6 @@ import time
 import os
 import threading
 import sys
-from numpy import empty
 from pepper_connection import PepperConnection
 from behaviors.expressions.expression import PepperExpression
 from behaviors.movement.gesture.head_gesture import HeadGesture
@@ -34,7 +33,7 @@ class Main:
         Starts a thread for popping programs from the queue, and starts listening on server.
         """
         threading.Thread(target=self.run).start()
-        server.start_server(5020)
+        server.start_server(5000)
         print("Interrupted by user, shutting down")
         self.should_run = False
         time.sleep(1.6)
@@ -136,7 +135,7 @@ def execute_program(program):
     """
     Executes a program with the help of exec.
     """
-    if program is empty:
+    if program == []:
         return
     # TODO: Do something before? Add some timer? Run in thread? Check code?
     exec(program) # pylint: disable=exec-used
