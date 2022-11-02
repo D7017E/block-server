@@ -21,6 +21,11 @@ def __post_code():
         message=message,
         queueLength=queue_length)
 
+@APP.after_request
+def add_header(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 def start_server(port=5000):
     """
     <port> int, optional port to use

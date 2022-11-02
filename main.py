@@ -13,7 +13,7 @@ from behaviors.expressions.expression import PepperExpression
 from behaviors.movement.gesture.head_gesture import HeadGesture
 from behaviors.movement.gesture.arm_gesture import ArmGesture
 from behaviors.movement.translation.translation import PepperMove
-# from behaviors.speech.PepperSpeech import PepperSpeech
+from behaviors.speech.pepper_speech import PepperSpeech
 from handle_code.blockly_connection import server
 from handle_code.queue.queue import Queue
 
@@ -34,7 +34,7 @@ class Main:
         Starts a thread for popping programs from the queue, and starts listening on server.
         """
         threading.Thread(target=self.run).start()
-        server.start_server(5020)
+        server.start_server(5000)
         print("Interrupted by user, shutting down")
         self.should_run = False
         time.sleep(1.6)
@@ -49,7 +49,7 @@ class Main:
 
             conn.connect()
 
-            # tts_service = conn.get_speech_service()
+            tts_service = conn.get_speech_service()
             motion_service = conn.get_motion_service()
             auto_service = conn.get_autonomous_service()
             battery_service = conn.get_battery_service()
@@ -84,23 +84,24 @@ class Main:
             # time.sleep(3)
             # move_service.move(0,0,0)
             # return
-            pep_expr.angry_eyes()
+            # pep_expr.angry_eyes()
+            pep_speech = PepperSpeech(tts_service)
             head_ges = HeadGesture(motion_service)
-            head_ges.reset_head()
+            # head_ges.reset_head()
 
 
-            pepper_move = PepperMove(motion_service)
-            # pepper_move.move(0, 0, 0.5, 3)
-            # time.sleep(2.5)
-            # pepper_move.move(0, 0, 1, 10)
+            pep_move = PepperMove(motion_service)
+            # # pep_move.move(0, 0, 0.5, 3)
+            # # time.sleep(2.5)
+            # # pep_move.move(0, 0, 1, 10)
 
             arm_ges = ArmGesture(motion_service)
-            arm_ges.rotate_left_elbow_roll(100, -89)
-            arm_ges.rotate_right_elbow_roll(100, 89)
-            arm_ges.rotate_right_shoulder_roll(100, -30)
-            arm_ges.rotate_left_shoulder_roll(100, 30)
-            arm_ges.rotate_right_shoulder_pitch(100, 0)
-            arm_ges.rotate_left_shoulder_pitch(100, 0)
+            # arm_ges.rotate_left_elbow_roll(100, -89)
+            # arm_ges.rotate_right_elbow_roll(100, 89)
+            # arm_ges.rotate_right_shoulder_roll(100, -30)
+            # arm_ges.rotate_left_shoulder_roll(100, 30)
+            # arm_ges.rotate_right_shoulder_pitch(100, 0)
+            # arm_ges.rotate_left_shoulder_pitch(100, 0)
 
             # pepperMove.move(0.2, -0.1, 1, 10)
 
@@ -113,11 +114,14 @@ class Main:
             # pepExpr.random_eyes(5)
             # pepExpr.squint_eyes(1)
             # pepExpr.blink_eyes(0.10)
+        print("Starting while")
         while self.should_run:
             time.sleep(1)
             program = Queue.get_next_program()
             if program is not None:
-                execute_program(program)
+                # TODO: Do something before? Add some timer? Run in thread? Check code?
+                exec(program) # pylint: disable=exec-used
+                time.sleep(5)
         if self.connect_to_pepper:
             print("Resetting pepper")
             head_ges.reset_head()
@@ -129,17 +133,17 @@ class Main:
             arm_ges.rotate_right_elbow_roll(100, .5)
 
             pep_expr.fade_eyes(0xffffff, 1)
-            pepper_move.stop_movement()
+            pep_move.stop_movement()
             time.sleep(0.4)
 
-def execute_program(program):
-    """
-    Executes a program with the help of exec.
-    """
-    if program is empty:
-        return
-    # TODO: Do something before? Add some timer? Run in thread? Check code?
-    exec(program) # pylint: disable=exec-used
-    time.sleep(5)
+    def execute_program(self, program):
+        """
+        Executes a program with the help of exec.
+        """
+        if program == []:
+            return
+        # TODO: Do something before? Add some timer? Run in thread? Check code?
+        exec(program) # pylint: disable=exec-used
+        time.sleep(5)
 
 Main()
