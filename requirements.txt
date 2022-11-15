@@ -1,0 +1,3 @@
+Flask==1.1.4
+multiprocess==0.70.13
+pylint==1.9.5
