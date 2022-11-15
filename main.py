@@ -2,22 +2,24 @@
 Main file, used to initialize connections.
 """
 
-# pylint: disable=superfluous-parens
+# pylint: disable=superfluous-parens, relative-import, too-many-locals
+
 import time
 import os
 import threading
 import sys
-from numpy import empty
+from behaviors.movement.gesture.hip_gesture import HipGesture
 from pepper_connection import PepperConnection
 from behaviors.expressions.expression import PepperExpression
 from behaviors.movement.gesture.head_gesture import HeadGesture
 from behaviors.movement.gesture.arm_gesture import ArmGesture
 from behaviors.movement.translation.translation import PepperMove
 from behaviors.speech.pepper_speech import PepperSpeech
+from behaviors.composite_functions import CompositeHandler
 from handle_code.blockly_connection import server
 from handle_code.queue.queue import Queue
 
-class Main:
+class Main(object):
     """
     Main class
     """
@@ -53,6 +55,7 @@ class Main:
             motion_service = conn.get_motion_service()
             auto_service = conn.get_autonomous_service()
             battery_service = conn.get_battery_service()
+            # audio_player_service = conn.get_audio_player_service()
             # led_service = conn.get_led_service()
             # audio_service = conn.get_audio_service()
             # tablet_service = conn.get_tablet_service()
@@ -87,6 +90,8 @@ class Main:
             # pep_expr.angry_eyes()
             pep_speech = PepperSpeech(tts_service)
             head_ges = HeadGesture(motion_service)
+            arm_ges = ArmGesture(motion_service)
+            hip_ges = HipGesture(motion_service)
             # head_ges.reset_head()
 
 
@@ -95,7 +100,21 @@ class Main:
             # # time.sleep(2.5)
             # # pep_move.move(0, 0, 1, 10)
 
-            arm_ges = ArmGesture(motion_service)
+
+
+            pep_expr.rotate_eyes(0x000000, 3)
+
+            comp_handler = CompositeHandler(arm_ges, head_ges, pep_speech, pep_expr, hip_ges)
+
+            # pep_expr.rotate_eyes(0x00ff00, 3)
+            # hip_ges.rotate_hip_roll(0, 100)
+            # music = audio_player_service.getInstalledSoundSetsList()
+            # print("MUSIC", music)
+            # fileId = audio_player_service.loadFile("/home/nao/music_files/dance_music.wav")
+            # audio_player_service.post.playFile("/home/nao/music_files/dance_music.wav")
+            # fileId=audio_player_service.loadFile("/home/nao/music_files/dance_music.wav")
+            #audio_player_service.play(fileId)
+            comp_handler.dance()
             # arm_ges.rotate_left_elbow_roll(100, -89)
             # arm_ges.rotate_right_elbow_roll(100, 89)
             # arm_ges.rotate_right_shoulder_roll(100, -30)
@@ -125,25 +144,21 @@ class Main:
         if self.connect_to_pepper:
             print("Resetting pepper")
             head_ges.reset_head()
-            arm_ges.rotate_right_shoulder_roll(100, -.5)
-            arm_ges.rotate_left_shoulder_roll(100, .5)
-            arm_ges.rotate_right_shoulder_pitch(100, 90)
-            arm_ges.rotate_left_shoulder_pitch(100, 90)
-            arm_ges.rotate_left_elbow_roll(100, -.5)
-            arm_ges.rotate_right_elbow_roll(100, .5)
+            arm_ges.reset_arms()
+            hip_ges.rotate_hip_roll(0, 100)
 
             pep_expr.fade_eyes(0xffffff, 1)
             pep_move.stop_movement()
             time.sleep(0.4)
 
-    def execute_program(self, program):
-        """
-        Executes a program with the help of exec.
-        """
-        if program == []:
-            return
-        # TODO: Do something before? Add some timer? Run in thread? Check code?
-        exec(program) # pylint: disable=exec-used
-        time.sleep(5)
+def execute_program(program):
+    """
+    Executes a program with the help of exec.
+    """
+    if program == []:
+        return
+    # TODO: Do something before? Add some timer? Run in thread? Check code?
+    exec(program) # pylint: disable=exec-used
+    time.sleep(5)
 
 Main()
