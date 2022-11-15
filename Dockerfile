@@ -24,4 +24,4 @@ COPY . .
 # Run code test
 # RUN pylint *.py
 
-CMD [ "python", "./main.py" ]
+CMD [ "python2", "-u", "./main.py" ]
