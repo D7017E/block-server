@@ -6,14 +6,5 @@ services:
     ports:
       - 5000:5000
       - 9559:9559
-    # network_mode: "host"
-    # networks:
-    #   - host
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
-
-
-# networks:
-#   host:
-#     name: host
-#     external: true
+    env_file:
+      - .env

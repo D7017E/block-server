@@ -22,6 +22,6 @@ COPY . .
 
 # TODO: Not copy .env file, make the password come from the docker environment
 # Run code test
-# RUN pylint *.py
+RUN pylint *.py
 
 CMD [ "python2", "-u", "./main.py" ]

@@ -138,6 +138,7 @@ class Main(object):
             time.sleep(1)
             program = Queue.get_next_program()
             if program is not None:
+                # pylint: disable=fixme
                 # TODO: Do something before? Add some timer? Run in thread? Check code?
                 exec(program) # pylint: disable=exec-used
                 time.sleep(5)
@@ -157,6 +158,7 @@ def execute_program(program):
     """
     if program == []:
         return
+    # pylint: disable=fixme
     # TODO: Do something before? Add some timer? Run in thread? Check code?
     exec(program) # pylint: disable=exec-used
     time.sleep(5)
