@@ -98,3 +98,9 @@ class PepperConnection(object):
         Returns a memory service from the connection
         """
         return self.session.service("ALMemory")
+
+    def get_audio_player_service(self):
+        """
+        Returns a service for playing .wav files
+        """
+        return self.session.service("ALAudioPlayer")
