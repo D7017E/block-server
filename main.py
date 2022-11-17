@@ -7,17 +7,7 @@ import time
 import threading
 import sys
 from multiprocessing import Process
-# from behaviors.movement.gesture.hip_gesture import HipGesture
-from handle_code import CodeRunner
-from handle_code.pepper_connection.pepper_connection import PepperConnection
-# from behaviors.expressions.expression import PepperExpression
-# from behaviors.movement.gesture.head_gesture import HeadGesture
-# from behaviors.movement.gesture.arm_gesture import ArmGesture
-# from behaviors.movement.translation.translation import PepperMove
-# from behaviors.speech.pepper_speech import PepperSpeech
-# from behaviors.composite_functions import CompositeHandler
-from handle_code.blockly_connection import server
-from handle_code.queue.queue import Queue
+from handle_code import CodeRunner, PepperConnection, server, Queue
 
 
 class Main(object):
@@ -47,6 +37,8 @@ class Main(object):
         """
         Connects to pepper, and pops programs from the queue.
         """
+        time.sleep(2)
+        print("Ready to run programs!")
         while self.should_run:
             time.sleep(1)
             program = Queue.get_next_program()

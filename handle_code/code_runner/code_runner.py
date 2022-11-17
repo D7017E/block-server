@@ -5,14 +5,9 @@ Code runner module which handles the code execution of programs
 """
 import threading
 import time
-from behaviors.movement.gesture.hip_gesture import HipGesture
 from handle_code.pepper_connection.pepper_connection import PepperConnection
-from behaviors.expressions.expression import PepperExpression
-from behaviors.movement.gesture.head_gesture import HeadGesture
-from behaviors.movement.gesture.arm_gesture import ArmGesture
-from behaviors.movement.translation.translation import PepperMove
-from behaviors.speech.pepper_speech import PepperSpeech
-from behaviors.composite_functions import CompositeHandler
+from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
+from behaviors import PepperMove, PepperSpeech, CompositeHandler
 
 class ConnectionError(Exception):
     """
@@ -33,8 +28,7 @@ class CodeRunner(object):
     def __init__(self, program_id, program, timeout_program, conn):
         # type: (int, str, int, PepperConnection) -> CodeRunner
         self.program_id = program_id
-        self.program = __process_program(program)
-        print(self.program)
+        self.program = self.__process_program(program)
         self.timeout_program = timeout_program
         self.conn = conn
         self.should_exit = False
@@ -54,6 +48,11 @@ class CodeRunner(object):
         self.pep_move = None
         self.pep_expr = None
         self.comp_handler = None
+    
+    def __process_program(self, program):
+        # type: (str) -> str
+        return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
+
 
     def start_execute_program(self):
         """
@@ -81,6 +80,13 @@ class CodeRunner(object):
 
     def __exec(self):
         self.__print("Running the program")
+        pep_speech = self.pep_speech
+        head_ges = self.head_ges
+        arm_ges = self.arm_ges 
+        hip_ges = self.hip_ges 
+        pep_move = self.pep_move
+        pep_expr = self.pep_expr
+        comp_handler = self.comp_handler
         try:
             exec(self.program)
         except ExecInterrupt:
@@ -148,7 +154,3 @@ class CodeRunner(object):
     def __print(self, text):
         # type: (str) -> None
         print(self.program_id, text)
-
-def __process_program(program):
-    # type: (str) -> None
-    return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
