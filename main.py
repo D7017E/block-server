@@ -64,6 +64,8 @@ class Main(object):
             # default state is "interactive"
             auto_service.setState("safeguard")
             motion_service.setIdlePostureEnabled("Head", False)
+            motion_service.setIdlePostureEnabled("LArm", False)
+            motion_service.setIdlePostureEnabled("RArm", False)
             auto_service.stopAll()
             behavior_service.stopAllBehaviors()
             blinking_service.setEnabled(False)
@@ -100,10 +102,6 @@ class Main(object):
             # # time.sleep(2.5)
             # # pep_move.move(0, 0, 1, 10)
 
-
-
-            pep_expr.rotate_eyes(0x000000, 3)
-
             comp_handler = CompositeHandler(arm_ges, head_ges, pep_speech, pep_expr, hip_ges)
 
             # pep_expr.rotate_eyes(0x00ff00, 3)
@@ -114,7 +112,9 @@ class Main(object):
             # audio_player_service.post.playFile("/home/nao/music_files/dance_music.wav")
             # fileId=audio_player_service.loadFile("/home/nao/music_files/dance_music.wav")
             #audio_player_service.play(fileId)
-            comp_handler.dance()
+            # comp_handler.victory_pose_one()
+            # pep_expr.fade_eyes(0xff0000, 2)
+            comp_handler.failure_pose()
             # arm_ges.rotate_left_elbow_roll(100, -89)
             # arm_ges.rotate_right_elbow_roll(100, 89)
             # arm_ges.rotate_right_shoulder_roll(100, -30)

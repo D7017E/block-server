@@ -19,6 +19,7 @@ class HeadGesture(object):
         self.spinning_head_running = False
 
     def move_head(self, yaw, degrees, speed):
+        # type: (HeadGesture, bool, float, int) -> None
         """
         * <yaw> boolean, if True then we change the yaw (left, right) else pitch (up, down)
         * <degrees>, if yaw between [-119.5, 119.5] (right and left) |
@@ -44,6 +45,7 @@ class HeadGesture(object):
             self.service.setAngles("HeadPitch", angle, speed)
 
     def reset_head(self):
+        # type: (HeadGesture) -> None
         """
         Resets the head position to 0, 0 for Pepper
         """
@@ -51,6 +53,7 @@ class HeadGesture(object):
         self.move_head(False, 0, 70)
 
     def nod_head(self):
+        # type: (HeadGesture) -> None
         """
         Nods the head up and down, this method takes about 1.6 seconds
         """
@@ -65,6 +68,7 @@ class HeadGesture(object):
         self.reset_head()
 
     def shake_head(self):
+        # type: (HeadGesture) -> None
         """
         Shakes the head side to side, this method takes about 3 seconds
         """
@@ -79,6 +83,7 @@ class HeadGesture(object):
         self.reset_head()
 
     def spin_head(self, duration):
+        # type: (HeadGesture, int) -> None
         """
         * <duration> is the number of seconds that the head should spin
         Spins the head up and down, side to side
@@ -100,6 +105,7 @@ class HeadGesture(object):
         self.reset_head()
 
     def __do_spin_head(self):
+        # type: (HeadGesture) -> None
         yaw = 0
         yaw_step = 20
         pitch = 0

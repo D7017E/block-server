@@ -18,6 +18,7 @@ class HipGesture(object):
         self.service = service
 
     def rotate_hip_roll(self, angle, speed):
+        # type: (HipGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-29.5, 29.5].
