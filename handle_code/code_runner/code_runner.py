@@ -1,3 +1,5 @@
+# pylint: disable=superfluous-parens, import-error, too-few-public-methods, exec-used, too-many-instance-attributes, broad-except, unused-import
+
 """
 Code runner module which handles the code execution of programs
 """
@@ -12,14 +14,26 @@ from behaviors.movement.translation.translation import PepperMove
 from behaviors.speech.pepper_speech import PepperSpeech
 from behaviors.composite_functions import CompositeHandler
 
+class ConnectionError(Exception):
+    """
+    Error class for connection errors
+    """
+    pass
+
 class ExecInterrupt(Exception):
+    """
+    Interrupt class for exec
+    """
     pass
 
 class CodeRunner(object):
+    """
+    Object for handling programs sent from blockly site
+    """
     def __init__(self, program_id, program, timeout_program, conn):
         # type: (int, str, int, PepperConnection) -> CodeRunner
         self.program_id = program_id
-        self.program = self.__process_program(program)
+        self.program = __process_program(program)
         print(self.program)
         self.timeout_program = timeout_program
         self.conn = conn
@@ -27,17 +41,30 @@ class CodeRunner(object):
         self.connecting = False
         self.program_exited = False
 
+        self.tts_service = None
+        self.motion_service = None
+        self.auto_service = None
+        self.behavior_service = None
+        self.blinking_service = None
+
+        self.pep_speech = None
+        self.head_ges = None
+        self.arm_ges = None
+        self.hip_ges = None
+        self.pep_move = None
+        self.pep_expr = None
+        self.comp_handler = None
+
     def start_execute_program(self):
+        """
+        Connects to Pepper and executes a program. Resets Pepper at the end.
+        """
         self.__connect_to_pepper_timer(10)
         self.__reset_pepper()
         self.__execute_program()
         self.__reset_pepper()
         self.auto_service.setState("interactive")
         time.sleep(2)
-
-    def __process_program(self, program):
-        # type: (str) -> None
-        return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
 
     def __execute_program(self):
         self.should_exit = False
@@ -56,10 +83,10 @@ class CodeRunner(object):
         self.__print("Running the program")
         try:
             exec(self.program)
-        except ExecInterrupt as e:
+        except ExecInterrupt:
             pass
-        except Exception as e:
-            self.__print("Execution error: " + str(e))
+        except Exception as exc:
+            self.__print("Execution error: " + str(exc))
             self.program_exited = True
             return
         self.__print("Stopping the program")
@@ -77,7 +104,7 @@ class CodeRunner(object):
 
         self.__print("Timeout when connecting to pepper")
         raise ConnectionError("Timeout when connecting to pepper")
-    
+
     def __reset_pepper(self):
         self.__print("Resetting Pepper")
         self.head_ges.reset_head()
@@ -113,9 +140,15 @@ class CodeRunner(object):
         self.hip_ges = HipGesture(self.motion_service)
         self.pep_move = PepperMove(self.motion_service)
         self.pep_expr = PepperExpression(0xffffff, self.conn.get_led_service())
-        self.comp_handler = CompositeHandler(self.arm_ges, self.head_ges, self.pep_speech, self.pep_expr, self.hip_ges)
+        self.comp_handler = CompositeHandler(
+            self.arm_ges, self.head_ges, self.pep_speech, self.pep_expr, self.hip_ges
+        )
         self.connecting = False
-    
+
     def __print(self, text):
         # type: (str) -> None
         print(self.program_id, text)
+
+def __process_program(program):
+    # type: (str) -> None
+    return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")

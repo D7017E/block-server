@@ -8,7 +8,7 @@ import threading
 import sys
 from multiprocessing import Process
 # from behaviors.movement.gesture.hip_gesture import HipGesture
-from handle_code.code_runner.code_runner import CodeRunner
+from handle_code import CodeRunner
 from handle_code.pepper_connection.pepper_connection import PepperConnection
 # from behaviors.expressions.expression import PepperExpression
 # from behaviors.movement.gesture.head_gesture import HeadGesture
