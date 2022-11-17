@@ -5,6 +5,7 @@ Code runner module which handles the code execution of programs
 """
 import threading
 import time
+import re
 from handle_code.pepper_connection.pepper_connection import PepperConnection
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
 from behaviors import PepperMove, PepperSpeech, CompositeHandler
@@ -49,9 +50,17 @@ class CodeRunner(object):
         self.pep_expr = None
         self.comp_handler = None
 
+
+    
+
     # pylint: disable=no-self-use
     def __process_program(self, program):
         # type: (str) -> str
+        def replace(match):
+            return "0x" + (match.group(1))[0:]
+
+        _hex_colour = re.compile(r'#([0-9a-fA-F]{6})\b')
+        program = _hex_colour.sub(replace, program)
         return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
 
     def start_execute_program(self):
@@ -96,8 +105,8 @@ class CodeRunner(object):
             self.__print("Execution error: " + str(exc))
             self.program_exited = True
             return
-        self.__print("Stopping the program")
         time.sleep(3)
+        self.__print("Stopping the program")
         self.program_exited = True
 
     def __connect_to_pepper_timer(self, timer):
