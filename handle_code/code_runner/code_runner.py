@@ -48,11 +48,11 @@ class CodeRunner(object):
         self.pep_move = None
         self.pep_expr = None
         self.comp_handler = None
-    
+
+    # pylint: disable=no-self-use
     def __process_program(self, program):
         # type: (str) -> str
         return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
-
 
     def start_execute_program(self):
         """
@@ -79,11 +79,12 @@ class CodeRunner(object):
         raise StopIteration("Force quit Pepper execution")
 
     def __exec(self):
+        # pylint: disable=unused-variable
         self.__print("Running the program")
         pep_speech = self.pep_speech
         head_ges = self.head_ges
-        arm_ges = self.arm_ges 
-        hip_ges = self.hip_ges 
+        arm_ges = self.arm_ges
+        hip_ges = self.hip_ges
         pep_move = self.pep_move
         pep_expr = self.pep_expr
         comp_handler = self.comp_handler
