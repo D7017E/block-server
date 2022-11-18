@@ -20,8 +20,8 @@ RUN pip2 install -r requirements.txt
 
 COPY . .
 
-# TODO: Not copy .env file, make the password come from the docker environment
 # Run code test
-RUN pylint *.py
+# RUN pylint *.py
+RUN find . -type f -name "*.py" | xargs pylint
 
 CMD [ "python2", "-u", "./main.py" ]

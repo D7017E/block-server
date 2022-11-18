@@ -2,14 +2,14 @@
 A file for composite functions, like dance and poses.
 """
 
-# pylint: disable=too-many-arguments
-
 import time
 
 class CompositeHandler(object):
     """
     A class for composite functions, like dance and poses.
     """
+
+    # pylint: disable=too-many-arguments
     def __init__(self, arms, head, mouth, eyes, hips):
         """
         Initializes the CompositeHandler object.

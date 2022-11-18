@@ -6,7 +6,7 @@ import random
 import time
 import threading
 
-class PepperMove():
+class PepperMove(object):
     """
     Class for translating the Pepper robot.
     """

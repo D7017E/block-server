@@ -23,6 +23,9 @@ def __post_code():
 
 @APP.after_request
 def add_header(response):
+    """
+    Will add headers to every request so that the browser doesn't block the request
+    """
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 

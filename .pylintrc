@@ -1,0 +1,10 @@
+[MESSAGES CONTROL]
+
+disable=
+    relative-import,
+    superfluous-parens,
+    missing-final-newline,
+    wrong-import-position,
+    too-few-public-methods
+
+ignore=__init__.py
