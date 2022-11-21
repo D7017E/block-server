@@ -9,11 +9,11 @@ class PepperConnection(object):
     This class handles a connection to Pepper and will also return a service from the connection
     """
 
-    def __init__(self, _ip, port, user_name, password):
+    def __init__(self, _ip, port, user_name):
+        # type: (str, int, int) -> PepperConnection
         self._ip = _ip
         self.port = port
         self.user_name = user_name
-        self.password = password
         self.session = qi.Session()
 
 

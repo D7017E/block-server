@@ -2,8 +2,6 @@
 A file for composite functions, like dance and poses.
 """
 
-# pylint: disable=too-many-arguments, unused-import, import-error
-
 import time
 from behaviors.expressions.expression import PepperExpression
 from behaviors.movement.gesture.arm_gesture import ArmGesture
@@ -15,6 +13,8 @@ class CompositeHandler(object):
     """
     A class for composite functions, like dance and poses.
     """
+
+    # pylint: disable=too-many-arguments
     def __init__(self, arms, head, mouth, eyes, hips):
 # type: (ArmGesture, HeadGesture, PepperSpeech, PepperExpression, HipGesture) -> CompositeHandler
         """

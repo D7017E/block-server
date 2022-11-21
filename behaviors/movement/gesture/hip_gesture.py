@@ -32,6 +32,9 @@ class HipGesture(object):
             return
         angle = angle * 3.14 / 180
         self.service.setAngles("HipRoll", angle, speed)
-    
+
     def reset_hip(self):
+        """
+        Resets the hips to their default position.
+        """
         self.rotate_hip_roll(0, 100)

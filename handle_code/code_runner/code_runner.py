@@ -1,12 +1,10 @@
-# pylint: disable=superfluous-parens, import-error, too-few-public-methods, exec-used, too-many-instance-attributes, broad-except, unused-import
-
 """
 Code runner module which handles the code execution of programs
 """
 import threading
 import time
 import re
-from handle_code.pepper_connection.pepper_connection import PepperConnection
+from handle_code.pepper_connection import PepperConnection # pylint: disable=unused-import
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
 from behaviors import PepperMove, PepperSpeech, CompositeHandler
 
@@ -22,6 +20,7 @@ class ExecInterrupt(Exception):
     """
     pass
 
+# pylint: disable=too-many-instance-attributes
 class CodeRunner(object):
     """
     Object for handling programs sent from blockly site
@@ -53,7 +52,15 @@ class CodeRunner(object):
     # pylint: disable=no-self-use
     def __process_program(self, program):
         # type: (str) -> str
+        """
+        Will add code between the program to be able to exit anywhere.
+        Will replace every #AAaaAA color to 0xAAaaAA.
+        Returns the program as a string.
+        """
         def replace(match):
+            """
+            Returns 0x + the color
+            """
             return "0x" + (match.group(1))[0:]
 
         _hex_colour = re.compile(r'#([0-9a-fA-F]{6})\b')
@@ -95,10 +102,10 @@ class CodeRunner(object):
         pep_expr = self.pep_expr
         comp_handler = self.comp_handler
         try:
-            exec(self.program)
+            exec(self.program) # pylint: disable=exec-used
         except ExecInterrupt:
             pass
-        except Exception as exc:
+        except Exception as exc: # pylint: disable=broad-except
             self.__print("Execution error: " + str(exc))
             self.program_exited = True
             return
