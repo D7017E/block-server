@@ -17,8 +17,20 @@ class PepperSpeech(object):
         self.service = service
 
     def talk(self, text):
+        # type: (PepperSpeech, str) -> None 
         """
         * <text> string of text for pepper to say
-        Basic speech to text
+        Basic speech-to-text
         """
         self.service.say(("\\RSPD={0}\\ \\VCT={1} \\" + str(text)).format(100, 100))
+
+    def talk_without_gesture(self, text):
+        # type: (PepperSpeech, str) -> None 
+        """
+        * <text> string of text for pepper to say
+        Speech-to-text without Pepper gesturing
+        """
+        self.service.say(
+            ("\\RSPD={0}\\ \\VCT={1} \\" + str(text)).format(100, 100),
+            {"bodyLanguageMode":"disabled"}
+            )

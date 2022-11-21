@@ -17,6 +17,7 @@ class ArmGesture(object):
         self.service = service
 
     def rotate_left_shoulder_roll(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [0.5, 89.5].
@@ -32,6 +33,7 @@ class ArmGesture(object):
         self.service.setAngles("LShoulderRoll", angle, speed)
 
     def rotate_left_shoulder_pitch(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
@@ -47,6 +49,7 @@ class ArmGesture(object):
         self.service.setAngles("LShoulderPitch", angle, speed)
 
     def rotate_left_elbow_roll(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-89.5, -0.5].
@@ -62,6 +65,7 @@ class ArmGesture(object):
         self.service.setAngles("LElbowRoll", angle, speed)
 
     def rotate_left_elbow_yaw(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
@@ -78,6 +82,7 @@ class ArmGesture(object):
         self.service.setAngles("LElbowYaw", angle, speed)
 
     def rotate_right_shoulder_roll(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-0.5, -89.5].
@@ -93,6 +98,7 @@ class ArmGesture(object):
         self.service.setAngles("RShoulderRoll", angle, speed)
 
     def rotate_right_shoulder_pitch(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
@@ -108,6 +114,7 @@ class ArmGesture(object):
         self.service.setAngles("RShoulderPitch", angle, speed)
 
     def rotate_right_elbow_roll(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [0.5, 89.5].
@@ -123,6 +130,7 @@ class ArmGesture(object):
         self.service.setAngles("RElbowRoll", angle, speed)
 
     def rotate_right_elbow_yaw(self, speed, angle):
+        # type: (ArmGesture, int, float) -> None
         """
         * <speed> integer, the speed at which the movement occurs. Between [0, 100].
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
@@ -139,6 +147,7 @@ class ArmGesture(object):
         self.service.setAngles("RElbowYaw", angle, speed)
 
     def reset_arms(self):
+        # type: (ArmGesture) -> None
         """
         Resets arms to start position.
         """
@@ -152,6 +161,7 @@ class ArmGesture(object):
         self.rotate_left_elbow_yaw(100, 0)
 
 def check_speed(speed):
+    # type: (int) -> bool
     """
     Ensures that the speed parameter is within range.
     """
