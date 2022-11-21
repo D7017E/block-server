@@ -2,6 +2,7 @@
 This module handles the queue of programs
 """
 import threading
+from program_object import Program_object as Program
 
 class Queue(object):
     """
@@ -11,16 +12,19 @@ class Queue(object):
     queue = []
     lock = threading.Lock()
     pause = False
+    highest_pid = 0
 
     @classmethod
     def add_program_to_queue(cls, program):
-        # type: (Queue, str) -> int
+        # type: (Program, str) -> int
         """
         <program> string, is the program as a string
 
         A static method which adds a program to the queue
         """
         cls.lock.acquire()
+        cls.highest_pid = cls.highest_pid + 1 
+        program.set_pid(cls.highest_pid)
         cls.queue.append(program)
         length = len(cls.queue)
         cls.lock.release()
@@ -41,6 +45,7 @@ class Queue(object):
             cls.lock.release()
             return None
         program = cls.queue.pop(0)
+        print(program)
         cls.lock.release()
         return program
 
