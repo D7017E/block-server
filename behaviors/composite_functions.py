@@ -1,6 +1,7 @@
 """
 A file for composite functions, like dance and poses.
 """
+# pylint: disable=unused-import
 
 import time
 from behaviors.expressions.expression import PepperExpression
