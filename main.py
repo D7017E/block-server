@@ -60,18 +60,22 @@ class Main(object):
             program = Queue.get_next_program()
             if program is not None:
                 self._id += 1
-                execute_program(program, self._id)
+                execute_program(
+                    program, self._id, self.pepper_ip, self.pepper_port, self.pepper_username
+                )
                 time.sleep(1)
 
-def execute_program(program, _id):
-    # type: (str, int) -> None
+def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
+    # type: (str, int, str, int, str) -> None
     """
     Prepare to execute the program
     """
     if program == "":
         return
     max_seconds = 100
-    proc = Process(target=__execute_program, args=(program, _id))
+    proc = Process(target=__execute_program, args=(
+        program, _id, pepper_ip, pepper_port, pepper_username
+        ))
     proc.start()
     for _ in range(max_seconds):
         time.sleep(1)

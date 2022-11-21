@@ -2,7 +2,7 @@
 This module handles the api calls with flask
 """
 from flask import Flask, request, jsonify
-from handle_code.queue.queue import Queue
+from handle_code import Queue
 
 APP = Flask("API")
 
@@ -20,6 +20,32 @@ def __post_code():
         success=True,
         message=message,
         queueLength=queue_length)
+
+@APP.route('/pause', methods=['POST'])
+def __pause_execution():
+    """
+    This method is called from the Flask application, it handles the incoming pause request, and
+    makes sure that the queue of programs is not popped from.
+    """
+    paused = Queue.pause_execution()
+    message = "Successfully paused the execution of programs"
+    return jsonify(
+        success=True,
+        message=message,
+        paused=paused)
+
+@APP.route('/unpause', methods=['POST'])
+def __unpause_execution():
+    """
+    This method is called from the Flask application, it handles the incoming unpause request, and
+    makes sure that the queue of programs is popped from.
+    """
+    paused = Queue.unpause_execution()
+    message = "Successfully unpaused the execution of programs"
+    return jsonify(
+        success=True,
+        message=message,
+        paused=paused)
 
 @APP.after_request
 def add_header(response):

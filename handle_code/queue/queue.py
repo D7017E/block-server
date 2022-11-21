@@ -10,10 +10,11 @@ class Queue(object):
     """
     queue = []
     lock = threading.Lock()
+    pause = False
 
     @classmethod
     def add_program_to_queue(cls, program):
-        # type: (Queue, str) -> None
+        # type: (Queue, str) -> int
         """
         <program> string, is the program as a string
 
@@ -27,12 +28,14 @@ class Queue(object):
 
     @classmethod
     def get_next_program(cls):
-         # type: (Queue) -> None
+        # type: (Queue) -> str | None
         """
         A static method with returns the first value in the queue
 
         Returns None if there is no more value, otherwise the program string
         """
+        if cls.pause:
+            return None
         cls.lock.acquire()
         if cls.queue == []:
             cls.lock.release()
@@ -40,3 +43,21 @@ class Queue(object):
         program = cls.queue.pop(0)
         cls.lock.release()
         return program
+
+    @classmethod
+    def pause_execution(cls):
+        # type: (Queue) -> bool
+        """
+        Static method for pausing programs
+        """
+        cls.pause = True
+        return True
+
+    @classmethod
+    def unpause_execution(cls):
+        # type: (Queue) -> bool
+        """
+        Static method for unpausing programs
+        """
+        cls.pause = False
+        return False
