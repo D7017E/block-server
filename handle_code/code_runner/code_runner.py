@@ -64,18 +64,32 @@ class CodeRunner(object):
             return "0x" + (match.group(1))[0:]
 
         _hex_colour = re.compile(r'#([0-9a-fA-F]{6})\b')
+        program = self.__add_should_exit(program)
         return _hex_colour.sub(replace, program)
-        # return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
+
+    def __add_should_exit(self, program):
+        # type: (str) -> str
+        """
+        Returns the program but with an if statement between every line with a raise condition
+        to be able to exit the program in the middle of execution.
+        """
+        new_program = ""
+        for line in program.splitlines():
+            spaces = len(line) - len(line.lstrip())
+            spaces_str = " " * spaces
+            new_program += spaces_str + "if self.should_exit:\n"
+            new_program += spaces_str + "    raise ExecInterrupt\n"
+            new_program += line + "\n"
+        return new_program
 
     def start_execute_program(self):
         """
         Connects to Pepper and executes a program. Resets Pepper at the end.
         """
         self.__connect_to_pepper_timer(10)
-        self.__reset_pepper()
+        self.__reset_pepper(False)
         self.__execute_program()
-        self.__reset_pepper()
-        self.auto_service.setState("interactive")
+        self.__reset_pepper(True)
         time.sleep(2)
 
     def __execute_program(self):
@@ -87,7 +101,7 @@ class CodeRunner(object):
                 return
         self.should_exit = True
         time.sleep(3)
-        self.__reset_pepper()
+        self.__reset_pepper(True)
         time.sleep(2)
         raise StopIteration("Force quit Pepper execution")
 
@@ -125,8 +139,12 @@ class CodeRunner(object):
         self.__print("Timeout when connecting to pepper")
         raise ConnectionError("Timeout when connecting to pepper")
 
-    def __reset_pepper(self):
+    def __reset_pepper(self, interactive_mode):
         self.__print("Resetting Pepper")
+        if interactive_mode:
+            self.auto_service.setState("interactive")
+        else:
+            self.auto_service.setState("safeguard")
         self.head_ges.reset_head()
         self.arm_ges.reset_arms()
         self.hip_ges.reset_hip()
@@ -147,8 +165,6 @@ class CodeRunner(object):
         self.behavior_service = self.conn.get_behavior_service()
         self.blinking_service = self.conn.get_blinking_service()
 
-        # default state is "interactive"
-        self.auto_service.setState("safeguard")
         self.motion_service.setIdlePostureEnabled("Head", False)
         self.auto_service.stopAll()
         self.behavior_service.stopAllBehaviors()
