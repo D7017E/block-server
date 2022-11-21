@@ -64,8 +64,8 @@ class CodeRunner(object):
             return "0x" + (match.group(1))[0:]
 
         _hex_colour = re.compile(r'#([0-9a-fA-F]{6})\b')
-        program = _hex_colour.sub(replace, program)
-        return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
+        return _hex_colour.sub(replace, program)
+        # return program.replace("\n", "\nif self.should_exit:\n    raise ExecInterrupt\n")
 
     def start_execute_program(self):
         """

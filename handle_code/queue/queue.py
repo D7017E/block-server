@@ -13,6 +13,7 @@ class Queue(object):
 
     @classmethod
     def add_program_to_queue(cls, program):
+        # type: (Queue, str) -> None
         """
         <program> string, is the program as a string
 
@@ -26,6 +27,7 @@ class Queue(object):
 
     @classmethod
     def get_next_program(cls):
+         # type: (Queue) -> None
         """
         A static method with returns the first value in the queue
 

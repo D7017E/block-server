@@ -30,6 +30,7 @@ def add_header(response):
     return response
 
 def start_server(port=5000):
+    # type: (int) -> None
     """
     <port> int, optional port to use
 
