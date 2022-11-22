@@ -6,8 +6,8 @@ import time
 import threading
 import sys
 from multiprocessing import Process
-from handle_code import CodeRunner, PepperConnection, server, Queue
-
+from handle_code import CodeRunner, PepperConnection, server
+from handle_code.queue.queue import Queue
 
 class Main(object):
     """
@@ -46,7 +46,8 @@ class Main(object):
         server.start_server(self.port)
         print("Interrupted by user, shutting down")
         self.should_run = False
-        time.sleep(1.6)
+        print("There are " + str(Queue.length()) + " programs still in the queue")
+        time.sleep(1.5)
         sys.exit(0)
 
     def run(self):
@@ -56,14 +57,13 @@ class Main(object):
         time.sleep(2)
         print("Ready to run programs!")
         while self.should_run:
-            time.sleep(1)
+            time.sleep(0.3)
             program = Queue.get_next_program()
             if program is not None:
                 self._id += 1
                 execute_program(
                     program, self._id, self.pepper_ip, self.pepper_port, self.pepper_username
                 )
-                time.sleep(1)
 
 def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
     # type: (str, int, str, int, str) -> None
@@ -85,6 +85,7 @@ def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
     print("Force stopping program")
     proc.terminate()
     proc.join()
+    time.sleep(0.3)
 
 def __execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
     # type: (str, int, str, int, str) -> None
