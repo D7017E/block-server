@@ -3,6 +3,7 @@ This module handles the api calls with flask
 """
 from flask import Flask, request, jsonify
 from handle_code import Queue
+from handle_code.queue import Program
 
 APP = Flask("API")
 
@@ -13,13 +14,26 @@ def __post_code():
     """
     if request.data == "":
         return jsonify(success=False, message="No body was received")
-    program = request.data
-    queue_length = Queue.add_program_to_queue(program)
-    message = "Successfully added your program to the queue"
+
+    (queue_length, pid) = Queue.add_program_to_queue(
+        Program(
+            request.data,
+            request.args.get('name', default="", type=str),
+            request.environ['REMOTE_ADDR']
+        )
+    )
+    print(queue_length, pid)
+    if queue_length == -1 or pid == -1:
+        return jsonify(
+            success=False,
+            message="Program was not added to queue, it was probably a duplicate"
+        )
     return jsonify(
         success=True,
-        message=message,
-        queueLength=queue_length)
+        message="Successfully added your program to the queue",
+        queueLength=queue_length,
+        pid=pid
+    )
 
 @APP.route('/pause', methods=['POST'])
 def __pause_execution():

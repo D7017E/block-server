@@ -7,7 +7,7 @@ import threading
 import sys
 from multiprocessing import Process
 from handle_code import CodeRunner, PepperConnection, server
-from handle_code.queue.queue import Queue
+from handle_code.queue.queue import Queue, Program # pylint: disable=unused-import
 
 class Main(object):
     """
@@ -22,7 +22,6 @@ class Main(object):
         self.pepper_port = 9559
         self.pepper_username = "nao"
         self.should_run = True
-        self._id = 0
         self.main()
 
     def main(self):
@@ -60,13 +59,12 @@ class Main(object):
             time.sleep(0.3)
             program = Queue.get_next_program()
             if program is not None:
-                self._id += 1
                 execute_program(
-                    program, self._id, self.pepper_ip, self.pepper_port, self.pepper_username
+                    program, self.pepper_ip, self.pepper_port, self.pepper_username
                 )
 
-def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
-    # type: (str, int, str, int, str) -> None
+def execute_program(program, pepper_ip, pepper_port, pepper_username):
+    # type: (Program, str, int, str) -> None
     """
     Prepare to execute the program
     """
@@ -74,7 +72,7 @@ def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
         return
     max_seconds = 100
     proc = Process(target=__execute_program, args=(
-        program, _id, pepper_ip, pepper_port, pepper_username
+        program, pepper_ip, pepper_port, pepper_username
         ))
     proc.start()
     for _ in range(max_seconds):
@@ -87,10 +85,10 @@ def execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
     proc.join()
     time.sleep(0.3)
 
-def __execute_program(program, _id, pepper_ip, pepper_port, pepper_username):
-    # type: (str, int, str, int, str) -> None
+def __execute_program(program, pepper_ip, pepper_port, pepper_username):
+    # type: (Program, str, int, str) -> None
     conn = PepperConnection(pepper_ip, pepper_port, pepper_username)
-    runner = CodeRunner(_id, program, 60, conn)
+    runner = CodeRunner(program, 60, conn)
     runner.start_execute_program()
 
 Main()
