@@ -102,7 +102,6 @@ class CodeRunner(object):
         self.should_exit = True
         time.sleep(3)
         self.__reset_pepper(True)
-        time.sleep(2)
         raise StopIteration("Force quit Pepper execution")
 
     def __exec(self):
@@ -123,7 +122,7 @@ class CodeRunner(object):
             self.__print("Execution error: " + str(exc))
             self.program_exited = True
             return
-        time.sleep(3)
+        time.sleep(1)
         self.__print("Stopping the program")
         self.program_exited = True
 
@@ -141,15 +140,15 @@ class CodeRunner(object):
 
     def __reset_pepper(self, interactive_mode):
         self.__print("Resetting Pepper")
-        if interactive_mode:
-            self.auto_service.setState("interactive")
-        else:
-            self.auto_service.setState("safeguard")
         self.head_ges.reset_head()
         self.arm_ges.reset_arms()
         self.hip_ges.reset_hip()
         self.pep_move.stop_movement()
-        time.sleep(1.5)
+        if interactive_mode:
+            self.auto_service.setState("interactive")
+        else:
+            self.auto_service.setState("safeguard")
+        time.sleep(0.5)
         self.__print("Done with resetting Pepper")
 
     def __configure_and_connect_to_pepper(self):
@@ -158,7 +157,7 @@ class CodeRunner(object):
         """
         self.__print("Trying to connect to Pepper")
         self.conn.connect()
-        time.sleep(1)
+        time.sleep(0.5)
         self.tts_service = self.conn.get_speech_service()
         self.motion_service = self.conn.get_motion_service()
         self.auto_service = self.conn.get_autonomous_service()
