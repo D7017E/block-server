@@ -61,3 +61,11 @@ class Queue(object):
         """
         cls.pause = False
         return False
+
+    @classmethod
+    def length(cls):
+        # type: (Queue) -> int
+        """
+        Static method for returning the length of the queue
+        """
+        return len(cls.queue)
