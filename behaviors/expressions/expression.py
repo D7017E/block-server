@@ -7,10 +7,10 @@ class PepperExpression(object):
     """
     This class makes Pepper do expressions with the eyes.
     """
-    def __init__(self, startColor, service):
+    def __init__(self, start_color, service):
         self.previous_color = None
         self.service = service
-        self.fade_eyes(startColor, 1)
+        self.fade_eyes(start_color, 1)
         service.createGroup(
             "BlinkGroup",
             [
