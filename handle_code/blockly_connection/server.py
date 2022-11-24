@@ -15,18 +15,19 @@ def __post_code():
     if request.data == "":
         return jsonify(success=False, message="No body was received")
 
-    (queue_length, pid) = Queue.add_program_to_queue(
+    (queue_length, pid, status) = Queue.add_program_to_queue(
         Program(
             request.data,
             request.args.get('name', default="", type=str),
             request.environ['REMOTE_ADDR']
         )
     )
-    print(queue_length, pid)
+    print(queue_length, pid, status)
     if queue_length == -1 or pid == -1:
         return jsonify(
             success=False,
-            message="Program was not added to queue, it was probably a duplicate"
+            message="Program was not added to queue",
+            status=status
         )
     return jsonify(
         success=True,

@@ -2,6 +2,8 @@
 An object to keep track of the programs that are in the queue
 """
 
+import datetime
+
 class Program(object):
     """
     A class which has program specific fields
@@ -20,6 +22,7 @@ class Program(object):
         self.name = name
         self.ip_address = ip_address
         self.pid = None
+        self.timestamp = datetime.datetime.now()
 
     def set_pid(self, pid):
         # type: (Program, int) -> None
@@ -56,3 +59,9 @@ class Program(object):
         Returns the ip address from the sender
         """
         return self.ip_address
+
+    def get_timestamp(self):
+        """
+        Returns the timestamp of when the program was created
+        """
+        return self.timestamp
