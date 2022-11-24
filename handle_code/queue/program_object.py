@@ -21,7 +21,7 @@ class Program(object):
         self.program = program
         self.name = name
         self.ip_address = ip_address
-        self.pid = None
+        self.pid = -1 # type: int
         self.timestamp = datetime.datetime.now()
 
     def set_pid(self, pid):
