@@ -22,7 +22,6 @@ def __post_code():
             request.environ['REMOTE_ADDR']
         )
     )
-    print(queue_length, pid, status)
     if queue_length == -1 or pid == -1:
         return jsonify(
             success=False,
@@ -34,6 +33,25 @@ def __post_code():
         message="Successfully added your program to the queue",
         queueLength=queue_length,
         pid=pid
+    )
+
+@APP.route('/edit', methods=['PUT'])
+def edit_program():
+    """
+    This method is called from the Flask application, it handles incoming edit requests.
+    With this endpoint, programs in the queue can be edited based on pid.
+    """
+
+    pid = request.args.get('pid', default="", type=str)
+    res = Queue.edit_program(pid, request.data)
+    if res:
+        return jsonify(
+            success=True,
+            message="Successfully edited program " + pid
+        )
+    return jsonify(
+        success=False,
+        message="Failed to edit program " + pid
     )
 
 @APP.route('/queue', methods=['GET'])
