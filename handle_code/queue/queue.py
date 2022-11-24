@@ -80,6 +80,21 @@ class Queue(object):
         return [True, ""]
 
     @classmethod
+    def edit_program(cls, pid, program):
+        # type: (Queue, str, str) -> bool
+        """
+        * <pid> str, program id of the program to edit
+        * <program> str, the program text to replace the original program with
+
+        Edits a program based on pid
+        """
+        for _p in cls.queue:
+            if _p.get_pid() == pid:
+                _p.set_program(program)
+                return True
+        return False
+
+    @classmethod
     def get_queue(cls):
         # type: (Queue) -> List[Tuple[str, str]]
         """

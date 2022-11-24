@@ -47,6 +47,14 @@ class Program(object):
         """
         return self.program
 
+    def set_program(self, program):
+        # type: (Program, str) -> None
+        """
+        Sets the program string
+        """
+
+        self.program = program
+
     def get_name(self):
         # type: (Program) -> str
         """
