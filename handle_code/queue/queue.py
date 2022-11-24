@@ -20,7 +20,7 @@ class Queue(object):
 
     @classmethod
     def add_program_to_queue(cls, program):
-        # type: (Queue, Program) -> Tuple(int, int, str)
+        # type: (Queue, Program) -> Tuple[int, int, str]
         """
         <program> string, is the program as a string
 
@@ -81,17 +81,22 @@ class Queue(object):
 
     @classmethod
     def edit_program(cls, pid, program):
-        # type: (Queue, str, str) -> bool
+        # type: (Queue, int, str) -> bool
         """
-        * <pid> str, program id of the program to edit
+        * <pid> int, program id of the program to edit
         * <program> str, the program text to replace the original program with
 
         Edits a program based on pid
         """
+        if pid == -1:
+            return False
+        cls.lock.acquire()
         for _p in cls.queue:
             if _p.get_pid() == pid:
                 _p.set_program(program)
+                cls.lock.release()
                 return True
+        cls.lock.release()
         return False
 
     @classmethod
@@ -105,6 +110,31 @@ class Queue(object):
         for _p in cls.queue:
             result.append((_p.get_pid(), _p.get_name()))
         return result
+
+    @classmethod
+    def clear_queue(cls):
+        # type: (Queue) -> None
+        """
+        Clears the queue of all programs
+        """
+        cls.lock.acquire()
+        cls.queue = []
+        cls.lock.release()
+
+    @classmethod
+    def remove_program(cls, pid):
+        # type: (Queue, int) -> Tuple[str, bool]
+        """
+        Remove a specific program from the queue
+        """
+        cls.lock.acquire()
+        for _i, _p in enumerate(cls.queue):
+            if _p.get_pid() == pid:
+                cls.queue.pop(_i)
+                cls.lock.release()
+                return ("Successfully deleted the program from the queue", True)
+        cls.lock.release()
+        return ("Couldn't find the program", False)
 
     @classmethod
     def pause_execution(cls):
