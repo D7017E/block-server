@@ -36,6 +36,20 @@ def __post_code():
         pid=pid
     )
 
+@APP.route('/queue', methods=['GET'])
+def get_queue():
+    """
+    This method is called from the Flask application, it handles incoming get queue requests.
+    With this endpoint, information about the queue can be retrieved.
+    """
+    queue = Queue.get_queue()
+    message = "Successfully retrieved the queue"
+    return jsonify(
+        success=True,
+        message=message,
+        queue=queue
+    )
+
 @APP.route('/pause', methods=['POST'])
 def __pause_execution():
     """

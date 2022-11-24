@@ -16,7 +16,7 @@ class Queue(object):
     lock = threading.Lock()
     pause = False
     highest_pid = 0
-    delta_time = datetime.timedelta(seconds = 10)
+    delta_time = datetime.timedelta(seconds=10)
 
     @classmethod
     def add_program_to_queue(cls, program):
@@ -69,16 +69,27 @@ class Queue(object):
         current_time = program.get_timestamp() - cls.delta_time
         cls.lock.acquire()
         for _p in cls.queue:
-            if _p.get_ip() == program.get_ip(): 
+            if _p.get_ip() == program.get_ip():
                 if _p.get_program() == program.get_program():
                     cls.lock.release()
                     return [False, "Program already exists"]
                 if current_time < _p.get_timestamp():
-                    print(current_time.strftime("%M, %S"), "<", _p.get_timestamp().strftime("%M, %S"))
                     cls.lock.release()
                     return [False, "Program frequency too high"]
         cls.lock.release()
         return [True, ""]
+
+    @classmethod
+    def get_queue(cls):
+        # type: (Queue) -> List[Tuple[str, str]]
+        """
+        Retrieves the queue as a list of tuples, containing the pid and name of the program.
+        """
+
+        result = []
+        for _p in cls.queue:
+            result.append([_p.get_pid(), _p.get_name()])
+        return result
 
     @classmethod
     def pause_execution(cls):
