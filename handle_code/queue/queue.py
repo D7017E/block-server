@@ -2,33 +2,46 @@
 This module handles the queue of programs
 """
 import threading
+# pylint: disable=unused-import
+import datetime
+from typing import Tuple, List
+from program_object import Program
 
 class Queue(object):
     """
     This class is a static class with a list of programs that can
     either be appended to or popped from.
     """
-    queue = []
+    queue = [] # type: List[Program]
     lock = threading.Lock()
     pause = False
+    highest_pid = 0
+    delta_time = datetime.timedelta(seconds = 10)
 
     @classmethod
     def add_program_to_queue(cls, program):
-        # type: (Queue, str) -> int
+        # type: (Queue, Program) -> Tuple(int, int, str)
         """
         <program> string, is the program as a string
 
         A static method which adds a program to the queue
         """
-        cls.lock.acquire()
-        cls.queue.append(program)
-        length = len(cls.queue)
-        cls.lock.release()
-        return length
+        [should_add, status] = Queue.__should_add_program(program)
+        if should_add:
+            cls.lock.acquire()
+            cls.highest_pid += 1
+            pid = cls.highest_pid
+            program.set_pid(pid)
+            cls.queue.append(program)
+            length = len(cls.queue)
+            cls.lock.release()
+            return (length, pid, status)
+        return (-1, -1, status)
+
 
     @classmethod
     def get_next_program(cls):
-        # type: (Queue) -> str | None
+        # type: (Queue) -> None | Program
         """
         A static method with returns the first value in the queue
 
@@ -41,8 +54,31 @@ class Queue(object):
             cls.lock.release()
             return None
         program = cls.queue.pop(0)
+        print(program)
         cls.lock.release()
         return program
+
+    @classmethod
+    def __should_add_program(cls, program):
+        # type: (Queue, Program) -> Tuple[bool, str]
+        """
+        *<program> string, is the program as a string
+
+        Checks if the program should be added to the queue by some requirements
+        """
+        current_time = program.get_timestamp() - cls.delta_time
+        cls.lock.acquire()
+        for _p in cls.queue:
+            if _p.get_ip() == program.get_ip(): 
+                if _p.get_program() == program.get_program():
+                    cls.lock.release()
+                    return [False, "Program already exists"]
+                if current_time < _p.get_timestamp():
+                    print(current_time.strftime("%M, %S"), "<", _p.get_timestamp().strftime("%M, %S"))
+                    cls.lock.release()
+                    return [False, "Program frequency too high"]
+        cls.lock.release()
+        return [True, ""]
 
     @classmethod
     def pause_execution(cls):

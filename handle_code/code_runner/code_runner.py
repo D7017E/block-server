@@ -4,7 +4,9 @@ Code runner module which handles the code execution of programs
 import threading
 import time
 import re
+from datetime import datetime
 from handle_code.pepper_connection import PepperConnection # pylint: disable=unused-import
+from handle_code.queue import Program # pylint: disable=unused-import
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
 from behaviors import PepperMove, PepperSpeech, CompositeHandler
 
@@ -25,10 +27,10 @@ class CodeRunner(object):
     """
     Object for handling programs sent from blockly site
     """
-    def __init__(self, program_id, program, timeout_program, conn):
-        # type: (int, str, int, PepperConnection) -> CodeRunner
-        self.program_id = program_id
-        self.program = self.__process_program(program)
+    def __init__(self, program, timeout_program, conn):
+        # type: (Program, int, PepperConnection) -> CodeRunner
+        self.program = program
+        self.program_code = self.__process_program(program.get_program())
         self.timeout_program = timeout_program
         self.conn = conn
         self.should_exit = False
@@ -115,7 +117,7 @@ class CodeRunner(object):
         pep_expr = self.pep_expr
         comp_handler = self.comp_handler
         try:
-            exec(self.program) # pylint: disable=exec-used
+            exec(self.program_code) # pylint: disable=exec-used
         except ExecInterrupt:
             pass
         except Exception as exc: # pylint: disable=broad-except
@@ -182,4 +184,9 @@ class CodeRunner(object):
 
     def __print(self, text):
         # type: (str) -> None
-        print(self.program_id, text)
+        message = (
+            str(datetime.now().strftime('%H:%M:%S.%f')[:-4]) + " - " + str(self.program.get_pid()) +
+            " - " + text)
+        if self.program.get_name() != "":
+            message += " - Name: " + self.program.get_name()
+        print("> " + message)
