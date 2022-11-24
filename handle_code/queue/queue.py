@@ -72,12 +72,12 @@ class Queue(object):
             if _p.get_ip() == program.get_ip():
                 if _p.get_program() == program.get_program():
                     cls.lock.release()
-                    return [False, "Program already exists"]
+                    return (False, "Program already exists")
                 if current_time < _p.get_timestamp():
                     cls.lock.release()
-                    return [False, "Program frequency too high"]
+                    return (False, "Program frequency too high")
         cls.lock.release()
-        return [True, ""]
+        return (True, "")
 
     @classmethod
     def get_queue(cls):
@@ -88,7 +88,7 @@ class Queue(object):
 
         result = []
         for _p in cls.queue:
-            result.append([_p.get_pid(), _p.get_name()])
+            result.append((_p.get_pid(), _p.get_name()))
         return result
 
     @classmethod
