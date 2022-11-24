@@ -55,12 +55,14 @@ class Program(object):
         return self.name
 
     def get_ip(self):
+        # type: (Program) -> str
         """
         Returns the ip address from the sender
         """
         return self.ip_address
 
     def get_timestamp(self):
+        # type: (Program) -> str
         """
         Returns the timestamp of when the program was created
         """
