@@ -44,7 +44,7 @@ class Main(object):
         threading.Thread(target=self.run).start()
         Queue.add_program_to_queue(
             Program(
-                "comp_handler.macarena_dance()",
+                "arm_ges.rotate_left_shoulder_roll(102, 0.5)",
                 "Hugo",
                 "137.0.0.1"
             )

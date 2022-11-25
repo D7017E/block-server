@@ -25,7 +25,7 @@ class HipGesture(object):
 
         Rotates the hip's roll to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_hip_roll"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 35%
         if angle < -29.5 or angle > 29.5:
@@ -42,7 +42,7 @@ class HipGesture(object):
 
         Rotates the hip's pitch to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_hip_pitch"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 35%
         if angle < -59.5 or angle > 59.5:
