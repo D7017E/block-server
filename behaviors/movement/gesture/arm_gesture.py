@@ -151,12 +151,12 @@ class ArmGesture(object):
         """
         Resets arms to start position.
         """
-        self.rotate_right_shoulder_roll(100, -.5)
-        self.rotate_left_shoulder_roll(100, .5)
+        self.rotate_right_shoulder_roll(100, -0.5)
+        self.rotate_left_shoulder_roll(100, 0.5)
         self.rotate_right_shoulder_pitch(100, 90)
         self.rotate_left_shoulder_pitch(100, 90)
-        self.rotate_left_elbow_roll(100, -.5)
-        self.rotate_right_elbow_roll(100, .5)
+        self.rotate_left_elbow_roll(100, -0.5)
+        self.rotate_right_elbow_roll(100, 0.5)
         self.rotate_right_elbow_yaw(100, 0)
         self.rotate_left_elbow_yaw(100, 0)
 
