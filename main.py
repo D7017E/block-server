@@ -42,13 +42,6 @@ class Main(object):
             print(self.pepper_username)
 
         threading.Thread(target=self.run).start()
-        Queue.add_program_to_queue(
-            Program(
-                "arm_ges.rotate_left_shoulder_roll(102, 0.5)",
-                "Hugo",
-                "137.0.0.1"
-            )
-        )
         server.start_server(self.port)
         print("Interrupted by user, shutting down")
         self.should_run = False

@@ -5,3 +5,4 @@ from expressions import PepperExpression
 from movement import ArmGesture, HeadGesture, HipGesture, PepperMove
 from speech import PepperSpeech
 from composite_handler import CompositeHandler
+from control import PepperController

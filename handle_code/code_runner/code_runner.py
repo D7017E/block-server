@@ -8,7 +8,7 @@ from datetime import datetime
 from handle_code.pepper_connection import PepperConnection # pylint: disable=unused-import
 from handle_code.queue import Program # pylint: disable=unused-import
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
-from behaviors import PepperMove, PepperSpeech, CompositeHandler
+from behaviors import PepperMove, PepperSpeech, CompositeHandler, PepperController
 
 class ConnectionError(Exception):
     """
@@ -37,11 +37,14 @@ class CodeRunner(object):
         self.connecting = False
         self.program_exited = False
 
-        self.tts_service = None
+        self.animated_speech_service = None
         self.motion_service = None
         self.auto_service = None
         self.behavior_service = None
         self.blinking_service = None
+        self.speech_recognition_service = None
+        self.tts_service = None
+        self.led_service = None
 
         self.pep_speech = None
         self.head_ges = None
@@ -50,6 +53,7 @@ class CodeRunner(object):
         self.pep_move = None
         self.pep_expr = None
         self.comp_handler = None
+        self.pep_controller = None
 
     # pylint: disable=no-self-use
     def __process_program(self, program):
@@ -116,6 +120,7 @@ class CodeRunner(object):
         pep_move = self.pep_move
         pep_expr = self.pep_expr
         comp_handler = self.comp_handler
+        pep_controller = self.pep_controller
         try:
             exec(self.program_code) # pylint: disable=exec-used
         except ExecInterrupt:
@@ -146,6 +151,7 @@ class CodeRunner(object):
         self.arm_ges.reset_arms()
         self.hip_ges.reset_hip()
         self.pep_move.stop_movement()
+        self.pep_controller.reset()
         if interactive_mode:
             self.auto_service.setState("interactive")
         else:
@@ -160,25 +166,32 @@ class CodeRunner(object):
         self.__print("Trying to connect to Pepper")
         self.conn.connect()
         time.sleep(0.5)
-        self.tts_service = self.conn.get_speech_service()
+        self.animated_speech_service = self.conn.get_animated_speech_service()
         self.motion_service = self.conn.get_motion_service()
         self.auto_service = self.conn.get_autonomous_service()
         self.behavior_service = self.conn.get_behavior_service()
         self.blinking_service = self.conn.get_blinking_service()
+        self.speech_recognition_service = self.conn.get_speech_recognition_service()
+        self.tts_service = self.conn.get_text_to_speech_service()
+        self.led_service = self.conn.get_led_service()
 
         self.motion_service.setIdlePostureEnabled("Head", False)
         self.auto_service.stopAll()
         self.behavior_service.stopAllBehaviors()
         self.blinking_service.setEnabled(False)
 
-        self.pep_speech = PepperSpeech(self.tts_service)
+        self.pep_speech = PepperSpeech(self.animated_speech_service)
         self.head_ges = HeadGesture(self.motion_service)
         self.arm_ges = ArmGesture(self.motion_service)
         self.hip_ges = HipGesture(self.motion_service)
         self.pep_move = PepperMove(self.motion_service)
-        self.pep_expr = PepperExpression(0xffffff, self.conn.get_led_service())
+        self.pep_expr = PepperExpression(0xffffff, self.led_service)
         self.comp_handler = CompositeHandler(
             self.arm_ges, self.head_ges, self.pep_speech, self.pep_expr, self.hip_ges
+        )
+        self.pep_controller = PepperController(
+            self.speech_recognition_service.getLanguage(),
+            self.speech_recognition_service, self.tts_service
         )
         self.connecting = False
 
