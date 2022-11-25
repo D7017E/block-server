@@ -42,6 +42,13 @@ class Main(object):
             print(self.pepper_username)
 
         threading.Thread(target=self.run).start()
+        Queue.add_program_to_queue(
+            Program(
+                "comp_handler.macarena_dance()",
+                "Hugo",
+                "137.0.0.1"
+            )
+        )
         server.start_server(self.port)
         print("Interrupted by user, shutting down")
         self.should_run = False
