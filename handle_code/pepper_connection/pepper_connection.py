@@ -33,7 +33,7 @@ class PepperConnection(object):
         # ssh.load_system_host_keys()
         # ssh.connect(hostname=self.ip, username=self.user_name, password=self.password)
 
-    def get_speech_service(self):
+    def get_animated_speech_service(self):
         """
         Returns a speech service from the connection
         """
@@ -104,3 +104,15 @@ class PepperConnection(object):
         Returns a service for playing .wav files
         """
         return self.session.service("ALAudioPlayer")
+
+    def get_speech_recognition_service(self):
+        """
+        Returns a service for recognizing speech
+        """
+        return self.session.service("ALSpeechRecognition")
+
+    def get_text_to_speech_service(self):
+        """
+        Returns a service for text-to-speech
+        """
+        return self.session.service("ALTextToSpeech")
