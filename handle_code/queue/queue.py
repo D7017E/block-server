@@ -13,6 +13,7 @@ class Queue(object):
     either be appended to or popped from.
     """
     queue = [] # type: List[Program]
+    admin_queue = [] # type: List[Program]
     lock = threading.Lock()
     pause = False
     highest_pid = 0
@@ -22,22 +23,39 @@ class Queue(object):
     def add_program_to_queue(cls, program):
         # type: (Queue, Program) -> Tuple[int, int, str]
         """
-        <program> string, is the program as a string
+        <program> Program, is the program object to be added to the queue
 
         A static method which adds a program to the queue
         """
+        if program.get_name() == "admin":
+            cls.lock.acquire()
+            cls.admin_queue.append(program)
+            pid = Queue.__increment_pid_add_program(program)
+            length = len(cls.admin_queue)
+            cls.lock.release()
+            return (length, pid, "Added to admin queue")
+
         [should_add, status] = Queue.__should_add_program(program)
         if should_add:
             cls.lock.acquire()
-            cls.highest_pid += 1
-            pid = cls.highest_pid
-            program.set_pid(pid)
+            pid = Queue.__increment_pid_add_program(program)
             cls.queue.append(program)
             length = len(cls.queue)
             cls.lock.release()
             return (length, pid, status)
         return (-1, -1, status)
 
+    @classmethod
+    def __increment_pid_add_program(cls, program):
+        # type: (Queue, Program) -> int
+        """
+        * <program> Program, is the program object
+
+        Will increment the pid and add it to the Program object, returns the pid id
+        """
+        cls.highest_pid += 1
+        program.set_pid(cls.highest_pid)
+        return cls.highest_pid
 
     @classmethod
     def get_next_program(cls):
@@ -47,14 +65,12 @@ class Queue(object):
 
         Returns None if there is no more value, otherwise the program string
         """
-        if cls.pause:
-            return None
+        program = None
         cls.lock.acquire()
-        if cls.queue == []:
-            cls.lock.release()
-            return None
-        program = cls.queue.pop(0)
-        print(program)
+        if cls.admin_queue != []:
+            program = cls.admin_queue.pop(0)
+        elif not cls.pause and cls.queue != []:
+            program = cls.queue.pop(0)
         cls.lock.release()
         return program
 
@@ -62,7 +78,7 @@ class Queue(object):
     def __should_add_program(cls, program):
         # type: (Queue, Program) -> Tuple[bool, str]
         """
-        *<program> string, is the program as a string
+        *<program> Program, is the program object
 
         Checks if the program should be added to the queue by some requirements
         """
@@ -107,6 +123,8 @@ class Queue(object):
         """
 
         result = []
+        for _p in cls.admin_queue:
+            result.append((_p.get_pid(), _p.get_name()))
         for _p in cls.queue:
             result.append((_p.get_pid(), _p.get_name()))
         return result
