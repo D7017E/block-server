@@ -5,6 +5,5 @@ services:
     container_name: block-server
     ports:
       - 5000:5000
-      - 9559:9559
     env_file:
       - .env

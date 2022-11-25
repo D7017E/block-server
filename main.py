@@ -30,16 +30,12 @@ class Main(object):
         """
         if os.environ.get('PORT') is not None:
             self.port = int(os.environ.get('PORT'))
-            print(self.port)
         if os.environ.get('PEPPER_IP') is not None:
             self.pepper_ip = os.environ.get('PEPPER_IP')
-            print(self.pepper_ip)
         if os.environ.get('PEPPER_PORT') is not None:
             self.pepper_port = int(os.environ.get('PEPPER_PORT'))
-            print(self.pepper_port)
         if os.environ.get('PEPPER_USERNAME') is not None:
             self.pepper_username = os.environ.get('PEPPER_USERNAME')
-            print(self.pepper_username)
 
         threading.Thread(target=self.run).start()
         server.start_server(self.port)
