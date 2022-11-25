@@ -23,7 +23,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [0.5, 89.5].
         Rotates the left shoulders's roll to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_left_shoulder_roll"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < 0.5 or angle > 89.5:
@@ -39,7 +39,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
         Rotates the left shoulders's pitch to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_left_shoulder_pitch"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -119.5 or angle > 119.5:
@@ -55,7 +55,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [-89.5, -0.5].
         Rotates the left elbows's roll to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_left_elbow_roll"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -89.5 or angle > -0.5:
@@ -72,7 +72,7 @@ class ArmGesture(object):
         Rotates the left elbows's yaw to a certain angle with a certain speed.
         NOTE: Does not need to be implemented on blockly site.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_left_elbow_yaw"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -119.5 or angle > 119.5:
@@ -88,7 +88,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [-0.5, -89.5].
         Rotates the right shoulders's roll to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_right_shoulder_roll"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -89.5 or angle > -0.5:
@@ -104,7 +104,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [-119.5, 119.5].
         Rotates the right shoulders's pitch to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate_right_shoulder_pitch"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -119.5 or angle > 119.5:
@@ -120,7 +120,7 @@ class ArmGesture(object):
         * <degrees> integer, the angle which the arm should move to. Between [0.5, 89.5].
         Rotates the right elbows's roll to a certain angle with a certain speed.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rootate_right_eblow_roll"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < 0.5 or angle > 89.5:
@@ -137,7 +137,7 @@ class ArmGesture(object):
         Rotates the right elbows's yaw to a certain angle with a certain speed.
         NOTE: Does not need to be implemented on blockly site.
         """
-        if not check_speed(speed):
+        if not check_speed(speed, "rotate,right_elbow_yaw"):
             return
         speed = float(speed) * 0.002 # to remove percentage and restrict max speed to 20%
         if angle < -119.5 or angle > 119.5:
@@ -160,12 +160,12 @@ class ArmGesture(object):
         self.rotate_right_elbow_yaw(100, 0)
         self.rotate_left_elbow_yaw(100, 0)
 
-def check_speed(speed):
-    # type: (int) -> bool
+def check_speed(speed, function):
+    # type: (int, str) -> bool
     """
     Ensures that the speed parameter is within range.
     """
     if speed <= 0 or speed > 100:
-        print("Wrong input for speed, only accepts (0, 100]")
+        print("Wrong input, " + str(speed) + ", for " + function + " speed, only accepts (0, 100]")
         return False
     return True

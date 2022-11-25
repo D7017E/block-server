@@ -4,6 +4,7 @@ Class for gesticulating the head.
 
 import time
 import threading
+from arm_gesture import check_speed
 
 class HeadGesture(object):
     """
@@ -27,8 +28,7 @@ class HeadGesture(object):
         * <speed>, between (0, 100]. Equal to percentage of max speed
         Moves the head in the direction given by parameters
         """
-        if speed <= 0 or speed > 100:
-            print("Wrong input for speed, only accepts (0, 100]")
+        if not check_speed(speed, "move_head"):
             return
         speed = float(speed) * 0.0035 # to remove percentage and restrict max speed to 35%
         if yaw is True:
