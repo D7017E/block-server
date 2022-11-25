@@ -21,7 +21,7 @@ class Program(object):
         self.program = program
         self.name = name
         self.ip_address = ip_address
-        self.pid = None
+        self.pid = -1 # type: int
         self.timestamp = datetime.datetime.now()
 
     def set_pid(self, pid):
@@ -46,6 +46,14 @@ class Program(object):
         Returns the program string
         """
         return self.program
+
+    def set_program(self, program):
+        # type: (Program, str) -> None
+        """
+        Sets the program string
+        """
+
+        self.program = program
 
     def get_name(self):
         # type: (Program) -> str

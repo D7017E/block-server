@@ -22,7 +22,6 @@ def __post_code():
             request.environ['REMOTE_ADDR']
         )
     )
-    print(queue_length, pid, status)
     if queue_length == -1 or pid == -1:
         return jsonify(
             success=False,
@@ -36,8 +35,27 @@ def __post_code():
         pid=pid
     )
 
+@APP.route('/edit', methods=['PUT'])
+def __edit_program():
+    """
+    This method is called from the Flask application, it handles incoming edit requests.
+    With this endpoint, programs in the queue can be edited based on pid.
+    """
+
+    pid = request.args.get('pid', default=-1, type=int)
+    res = Queue.edit_program(pid, request.data)
+    if res:
+        return jsonify(
+            success=True,
+            message="Successfully edited program " + pid
+        )
+    return jsonify(
+        success=False,
+        message="Failed to edit program " + pid
+    )
+
 @APP.route('/queue', methods=['GET'])
-def get_queue():
+def __get_queue():
     """
     This method is called from the Flask application, it handles incoming get queue requests.
     With this endpoint, information about the queue can be retrieved.
@@ -49,6 +67,21 @@ def get_queue():
         message=message,
         queue=queue
     )
+
+@APP.route('/remove', methods=['DELETE'])
+def __delete_execution():
+    pid = request.args.get('pid', default=-1, type=int)
+    message = ""
+    success = False
+    if pid == -1:
+        Queue.clear_queue()
+        message = "Successfully cleared the queue"
+        success = True
+    else:
+        (message, success) = Queue.remove_program(pid)
+    return jsonify(
+        success=success,
+        message=message)
 
 @APP.route('/pause', methods=['POST'])
 def __pause_execution():
@@ -77,7 +110,7 @@ def __unpause_execution():
         paused=paused)
 
 @APP.after_request
-def add_header(response):
+def __add_header(response):
     """
     Will add headers to every request so that the browser doesn't block the request
     """

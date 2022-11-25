@@ -94,6 +94,7 @@ def execute_program(program, pepper_ip, pepper_port, pepper_username):
 
 def __execute_program(program, pepper_ip, pepper_port, pepper_username):
     # type: (Program, str, int, str) -> None
+    print("Starting a program")
     conn = PepperConnection(pepper_ip, pepper_port, pepper_username)
     runner = CodeRunner(program, 60, conn)
     runner.start_execute_program()
