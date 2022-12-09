@@ -62,22 +62,13 @@ def __get_queue():
     """
     queue = Queue.get_queue()
     message = "Successfully retrieved the queue"
+    pause = Queue.get_pause()
     return jsonify(
         success=True,
         message=message,
-        queue=queue
+        queue=queue,
+        paused=pause
     )
-
-@APP.route('is_paused', methods=['GET'])
-def __get_is_paused():
-    """
-    This method is called from the Flask application, it handles incoming is_paused queue requests.
-    With this endpoint, information about the queue can be retrieved.
-    """
-    paused = Queue.get_pause()
-    return jsonify(
-        success=True,
-        paused=paused)
 
 @APP.route('/remove', methods=['DELETE'])
 def __delete_execution():
