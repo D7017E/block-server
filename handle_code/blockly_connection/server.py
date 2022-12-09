@@ -115,6 +115,7 @@ def __add_header(response):
     Will add headers to every request so that the browser doesn't block the request
     """
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = "GET, PUT, POST, DELETE"
     return response
 
 def start_server(port=5000):
