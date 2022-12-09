@@ -173,6 +173,14 @@ class Queue(object):
         return False
 
     @classmethod
+    def get_pause(cls):
+        # type: (Queue) -> bool
+        """
+        Static method for getting pause variable
+        """
+        return cls.pause
+
+    @classmethod
     def length(cls):
         # type: (Queue) -> int
         """
