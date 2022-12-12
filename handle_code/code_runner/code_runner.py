@@ -8,7 +8,7 @@ from datetime import datetime
 from handle_code.pepper_connection import PepperConnection # pylint: disable=unused-import
 from handle_code.queue import Program # pylint: disable=unused-import
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
-from behaviors import PepperMove, PepperSpeech, CompositeHandler, PepperController
+from behaviors import PepperMove, PepperSpeech, CompositeHandler, PepperController, RPSController
 
 class ConnectionError(Exception):
     """
@@ -27,8 +27,8 @@ class CodeRunner(object):
     """
     Object for handling programs sent from blockly site
     """
-    def __init__(self, program, timeout_program, conn):
-        # type: (Program, int, PepperConnection) -> CodeRunner
+    def __init__(self, program, timeout_program, conn, ip_address, password): # pylint: disable=too-many-arguments
+        # type: (Program, int, PepperConnection, str, str) -> CodeRunner
         self.program = program
         self.program_code = self.__process_program(program.get_program())
         self.timeout_program = timeout_program
@@ -54,6 +54,10 @@ class CodeRunner(object):
         self.pep_expr = None
         self.comp_handler = None
         self.pep_controller = None
+        self.rps_controller = None
+
+        self.ip_address = ip_address
+        self.password = password
 
     # pylint: disable=no-self-use
     def __process_program(self, program):
@@ -107,6 +111,8 @@ class CodeRunner(object):
                 return
         self.should_exit = True
         time.sleep(3)
+        if self.program_exited:
+            return
         self.__reset_pepper(True)
         raise StopIteration("Force quit Pepper execution")
 
@@ -121,6 +127,7 @@ class CodeRunner(object):
         pep_expr = self.pep_expr
         comp_handler = self.comp_handler
         pep_controller = self.pep_controller
+        rps_controller = self.rps_controller
         try:
             exec(self.program_code) # pylint: disable=exec-used
         except ExecInterrupt:
@@ -154,8 +161,8 @@ class CodeRunner(object):
         self.pep_controller.reset()
         if interactive_mode:
             self.auto_service.setState("interactive")
-        else:
-            self.auto_service.setState("safeguard")
+        # else:
+        #     self.auto_service.setState("safeguard")
         time.sleep(0.5)
         self.__print("Done with resetting Pepper")
 
@@ -192,6 +199,10 @@ class CodeRunner(object):
         self.pep_controller = PepperController(
             self.speech_recognition_service.getLanguage(),
             self.speech_recognition_service, self.tts_service
+        )
+        self.rps_controller = RPSController(
+            self.ip_address,
+            self.password
         )
         self.connecting = False
 
