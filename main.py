@@ -21,6 +21,7 @@ class Main(object):
         self.pepper_ip = "130.240.238.32"
         self.pepper_port = 9559
         self.pepper_username = "nao"
+        self.pepper_password = ""
         self.should_run = True
         self.main()
 
@@ -36,6 +37,8 @@ class Main(object):
             self.pepper_port = int(os.environ.get('PEPPER_PORT'))
         if os.environ.get('PEPPER_USERNAME') is not None:
             self.pepper_username = os.environ.get('PEPPER_USERNAME')
+        if os.environ.get('PEPPER_PASSWORD') is not None:
+            self.pepper_password = os.environ.get('PEPPER_PASSWORD')
 
         threading.Thread(target=self.run).start()
         server.start_server(self.port)
@@ -56,11 +59,12 @@ class Main(object):
             program = Queue.get_next_program()
             if program is not None:
                 execute_program(
-                    program, self.pepper_ip, self.pepper_port, self.pepper_username
+                    program, self.pepper_ip, self.pepper_port,
+                    self.pepper_username, self.pepper_password
                 )
 
-def execute_program(program, pepper_ip, pepper_port, pepper_username):
-    # type: (Program, str, int, str) -> None
+def execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_password):
+    # type: (Program, str, int, str, str) -> None
     """
     Prepare to execute the program
     """
@@ -68,7 +72,7 @@ def execute_program(program, pepper_ip, pepper_port, pepper_username):
         return
     max_seconds = 100
     proc = Process(target=__execute_program, args=(
-        program, pepper_ip, pepper_port, pepper_username
+        program, pepper_ip, pepper_port, pepper_username, pepper_password
         ))
     proc.start()
     for _ in range(max_seconds):
@@ -81,11 +85,11 @@ def execute_program(program, pepper_ip, pepper_port, pepper_username):
     proc.join()
     time.sleep(0.3)
 
-def __execute_program(program, pepper_ip, pepper_port, pepper_username):
-    # type: (Program, str, int, str) -> None
+def __execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_password):
+    # type: (Program, str, int, str, str) -> None
     print("Starting a program")
     conn = PepperConnection(pepper_ip, pepper_port, pepper_username)
-    runner = CodeRunner(program, 60, conn)
+    runner = CodeRunner(program, 60, conn, pepper_ip, pepper_password)
     runner.start_execute_program()
 
 Main()
