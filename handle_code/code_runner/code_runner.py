@@ -8,7 +8,7 @@ from datetime import datetime
 from handle_code.pepper_connection import PepperConnection # pylint: disable=unused-import
 from handle_code.queue import Program # pylint: disable=unused-import
 from behaviors import HipGesture, PepperExpression, HeadGesture, ArmGesture
-from behaviors import PepperMove, PepperSpeech, CompositeHandler, PepperController, RPSController
+from behaviors import PepperMove, PepperSpeech, CompositeHandler, PepperController, RPSController, WebController # pylint: disable=line-too-long
 
 class ConnectionError(Exception):
     """
@@ -27,8 +27,17 @@ class CodeRunner(object):
     """
     Object for handling programs sent from blockly site
     """
-    def __init__(self, program, timeout_program, conn, ip_address, password): # pylint: disable=too-many-arguments
-        # type: (Program, int, PepperConnection, str, str) -> CodeRunner
+    def __init__(
+            self,
+            program,
+            timeout_program,
+            conn,
+            ip_address,
+            password,
+            api_key,
+            search_key
+        ): # pylint: disable=too-many-arguments
+        # type: (Program, int, PepperConnection, str, str, str, str) -> CodeRunner
         self.program = program
         self.program_code = self.__process_program(program.get_program())
         self.timeout_program = timeout_program
@@ -45,6 +54,7 @@ class CodeRunner(object):
         self.speech_recognition_service = None
         self.tts_service = None
         self.led_service = None
+        self.tablet_service = None
 
         self.pep_speech = None
         self.head_ges = None
@@ -55,9 +65,13 @@ class CodeRunner(object):
         self.comp_handler = None
         self.pep_controller = None
         self.rps_controller = None
+        self.web_controller = None
 
         self.ip_address = ip_address
         self.password = password
+
+        self.api_key = api_key
+        self.search_key = search_key
 
     # pylint: disable=no-self-use
     def __process_program(self, program):
@@ -128,6 +142,7 @@ class CodeRunner(object):
         comp_handler = self.comp_handler
         pep_controller = self.pep_controller
         rps_controller = self.rps_controller
+        web_controller = self.web_controller
         try:
             exec(self.program_code) # pylint: disable=exec-used
         except ExecInterrupt:
@@ -181,6 +196,7 @@ class CodeRunner(object):
         self.speech_recognition_service = self.conn.get_speech_recognition_service()
         self.tts_service = self.conn.get_text_to_speech_service()
         self.led_service = self.conn.get_led_service()
+        self.tablet_service = self.conn.get_tablet_service()
 
         self.motion_service.setIdlePostureEnabled("Head", False)
         self.auto_service.stopAll()
@@ -203,6 +219,13 @@ class CodeRunner(object):
         self.rps_controller = RPSController(
             self.ip_address,
             self.password
+        )
+        self.web_controller = WebController(
+            self.animated_speech_service,
+            self.tablet_service,
+            self.speech_recognition_service,
+            self.api_key,
+            self.search_key
         )
         self.connecting = False
 

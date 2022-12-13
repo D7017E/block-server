@@ -14,6 +14,7 @@ class RPSController(object):
         self.password = password
 
     def play_rps(self, language="Swedish"):
+        # type: (RPSController, str) -> None
         """
         Class for starting a game of rock-paper-scissors
         """
