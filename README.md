@@ -50,10 +50,13 @@ Make sure all your dependencies are installed, see the [Installation](#Installat
 
 If you are running in docker you need to add a .env file in the root of the directory, this file should contain the following:
 ```
+PEPPER_PASSWORD="xxx"
 PEPPER_PORT=9559
 PEPPER_IP="xxx.xxx.xxx.xxx"
 PEPPER_USERNAME="name"
 PORT=5000 # port for the server
+ASK_SEARCH_KEY="xxx" # Search key for Google API, useful for web interaction
+ASK_API_KEY="xxx" # API key for Google API, useful for web interaction
 ```
 This file is used to pass in environment variables to the docker container. If you are running the server locally you can just add these variables to your system environment variables or change the code in main.py to use your own variables.
 
