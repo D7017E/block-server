@@ -22,7 +22,7 @@ class PepperSpeech(object):
         * <text> str, string of text for pepper to say
         Basic speech-to-text
         """
-        self.service.say(("\\RSPD={0}\\ \\VCT={1} \\" + str(text)).format(100, 100))
+        self.service.say(str(text))
 
     def talk_without_gesture(self, text):
         # type: (PepperSpeech, str) -> None

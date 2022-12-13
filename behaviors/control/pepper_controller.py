@@ -20,8 +20,10 @@ class PepperController(object):
         Sets the language of the Pepper robot
         """
 
+        self.speech_rec.pause(True)
         self.speech_rec.setLanguage(language)
         self.tts.setLanguage(language)
+        self.speech_rec.pause(False)
 
     def set_volume(self, volume):
         # type: (PepperController, int) -> None

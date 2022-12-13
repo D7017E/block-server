@@ -9,7 +9,7 @@ from multiprocessing import Process
 from handle_code import CodeRunner, PepperConnection, server
 from handle_code.queue.queue import Queue, Program # pylint: disable=unused-import
 
-class Main(object):
+class Main(object): # pylint: disable=too-many-instance-attributes
     """
     Main class
     """
@@ -22,6 +22,8 @@ class Main(object):
         self.pepper_port = 9559
         self.pepper_username = "nao"
         self.pepper_password = ""
+        self.api_key = ""
+        self.search_key = ""
         self.should_run = True
         self.main()
 
@@ -39,6 +41,10 @@ class Main(object):
             self.pepper_username = os.environ.get('PEPPER_USERNAME')
         if os.environ.get('PEPPER_PASSWORD') is not None:
             self.pepper_password = os.environ.get('PEPPER_PASSWORD')
+        if os.environ.get('ASK_API_KEY') is not None:
+            self.api_key = os.environ.get('ASK_API_KEY')
+        if os.environ.get('ASK_SEARCH_KEY') is not None:
+            self.search_key = os.environ.get('ASK_SEARCH_KEY')
 
         threading.Thread(target=self.run).start()
         server.start_server(self.port)
@@ -60,11 +66,19 @@ class Main(object):
             if program is not None:
                 execute_program(
                     program, self.pepper_ip, self.pepper_port,
-                    self.pepper_username, self.pepper_password
+                    self.pepper_username, self.pepper_password, self.api_key, self.search_key
                 )
 
-def execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_password):
-    # type: (Program, str, int, str, str) -> None
+def execute_program(
+        program,
+        pepper_ip,
+        pepper_port,
+        pepper_username,
+        pepper_password,
+        api_key,
+        search_key
+    ): # pylint: disable=too-many-arguments
+    # type: (Program, str, int, str, str, str, str) -> None
     """
     Prepare to execute the program
     """
@@ -72,7 +86,7 @@ def execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_pas
         return
     max_seconds = 100
     proc = Process(target=__execute_program, args=(
-        program, pepper_ip, pepper_port, pepper_username, pepper_password
+        program, pepper_ip, pepper_port, pepper_username, pepper_password, api_key, search_key
         ))
     proc.start()
     for _ in range(max_seconds):
@@ -85,11 +99,19 @@ def execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_pas
     proc.join()
     time.sleep(0.3)
 
-def __execute_program(program, pepper_ip, pepper_port, pepper_username, pepper_password):
-    # type: (Program, str, int, str, str) -> None
+def __execute_program(
+        program,
+        pepper_ip,
+        pepper_port,
+        pepper_username,
+        pepper_password,
+        api_key,
+        search_key
+    ): # pylint: disable=too-many-arguments
+    # type: (Program, str, int, str, str, str, str) -> None
     print("Starting a program")
     conn = PepperConnection(pepper_ip, pepper_port, pepper_username)
-    runner = CodeRunner(program, 60, conn, pepper_ip, pepper_password)
+    runner = CodeRunner(program, 60, conn, pepper_ip, pepper_password, api_key, search_key)
     runner.start_execute_program()
 
 Main()
