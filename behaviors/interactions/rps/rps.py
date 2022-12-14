@@ -14,8 +14,9 @@ class RPSController(object):
         self.password = password
 
     def play_rps(self, language="Swedish"):
-        # type: (RPSController, str) -> None
+        # type: (RPSController, str) -> bool
         """
         Class for starting a game of rock-paper-scissors
         """
         server_connection.main(self.ip_address, self.password, language)
+        
