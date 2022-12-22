@@ -2,5 +2,5 @@ Flask==1.1.4
 multiprocess==0.70.13
 pylint==1.9.5
 typing==3.7.4
-prps>=0.0.2
+prps>=0.0.5
 ask-pepperonit==0.0.8
