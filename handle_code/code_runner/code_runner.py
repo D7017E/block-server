@@ -176,8 +176,8 @@ class CodeRunner(object):
         self.pep_controller.reset()
         if interactive_mode:
             self.auto_service.setState("interactive")
-        # else:
-        #     self.auto_service.setState("safeguard")
+        else:
+            self.auto_service.setState("safeguard")
         time.sleep(0.5)
         self.__print("Done with resetting Pepper")
 
