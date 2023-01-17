@@ -19,4 +19,3 @@ class RPSController(object):
         Class for starting a game of rock-paper-scissors
         """
         server_connection.main(self.ip_address, self.password, language)
-        
