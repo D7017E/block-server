@@ -18,7 +18,7 @@ class Main(object): # pylint: disable=too-many-instance-attributes
         Sets start variables and calls main method.
         """
         self.port = 5000
-        self.pepper_ip = "130.240.238.32"
+        self.pepper_ip = "10.0.1.146"
         self.pepper_port = 9559
         self.pepper_username = "nao"
         self.pepper_password = ""
